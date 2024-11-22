@@ -1,0 +1,24 @@
+{
+  "name": "screen_scouts",
+  "version": "1.0.0",
+  "main": "app.js",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "script": "node app.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/zoroisjoyboy/CS546-Screen_Scouts.git"
+  },
+  "author": "Group4",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/zoroisjoyboy/CS546-Screen_Scouts/issues"
+  },
+  "homepage": "https://github.com/zoroisjoyboy/CS546-Screen_Scouts#readme",
+  "description": "",
+  "dependencies": {
+    "mongodb": "^6.10.0"
+  }
+}
