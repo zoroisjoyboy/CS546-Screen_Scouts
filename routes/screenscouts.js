@@ -1,5 +1,6 @@
 import express from 'express'
 import {Router} from 'express';
+import {isValidID} from '../helpers.js';
 // import {} from '../data/whateverthefilenameis.js';
 
 
@@ -14,7 +15,21 @@ router.route('/').get(async (req, res) => {
       console.log('Cannot get homepage');
       res.status(500).send('There was an error getting the homepage');
     }
-  });
-  
-  
+});
+
+router.route('/user/:id').get(async (req, res) => {
+  let userId;
+  try {
+    userId = isValidID(req.params.id);
+  } catch (e) {
+    res.status(404).render('error');
+  }
+  try {
+    res.status(200).render('userProfile', {
+      userId: userId
+    });
+  } catch (e) {
+    res.status(500).render('error');
+  }
+});
 
