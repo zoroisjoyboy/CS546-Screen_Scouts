@@ -22,9 +22,9 @@ async function main() {
 
     } catch (e) {
         console.error('Error occured while inserting data: ', e);
-    } finally {
-        await closeConnection();
-    }
+    } //finally {
+       // await closeConnection();
+   //}
 }
 
 main();
