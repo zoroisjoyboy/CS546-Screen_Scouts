@@ -6,8 +6,8 @@ async function main() {
     await db.dropDatabase();
 
     try {
-        let moviesJsonString = fs.readFileSync('./moviesData.json');;
-        let showJsonString = fs.readFileSync('./showsData.json');
+        let moviesJsonString = fs.readFileSync('../moviesData.json');;
+        let showJsonString = fs.readFileSync('../showsData.json');
 
         const moviesData = JSON.parse(moviesJsonString);
         const showsData = JSON.parse(showJsonString);
@@ -22,9 +22,9 @@ async function main() {
 
     } catch (e) {
         console.error('Error occured while inserting data: ', e);
-    } //finally {
-       // await closeConnection();
-   //}
+    } finally {
+       await closeConnection();
+   }
 }
 
 main();
