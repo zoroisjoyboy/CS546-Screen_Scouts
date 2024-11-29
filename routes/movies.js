@@ -13,6 +13,14 @@ router.route('/').get(async (req, res) => {
       return res.status(500).send(e);
     }
   });
-  
+
+router.route('/:id').get(async (req, res) => {
+    try {
+      const movie = await movieData.getMovieById(req.params.id);
+      return res.json(movie);
+    } catch (e) {
+      return res.status(404).json(e);
+    }
+  });
   
   export default router;
