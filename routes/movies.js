@@ -35,7 +35,7 @@ router
       return res.status(400).json({error: e});
     }
           
-    //insert the post
+    //insert the movie
     try {
       const newMovie = await movieData.addMovie(movieInfo.overview, movieInfo.release_date, movieInfo.vote_average, movieInfo.genres);
       return res.json(newMovie);
