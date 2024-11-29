@@ -13,7 +13,7 @@ let exportedMethods = {
       const showCollection = await shows();
       const show = await showCollection.findOne({_id: new ObjectId(id)});
       if (!show) throw 'Error: User not found';
-      return [show.overview, show.first_air_date, show.vote_average, show.genres, show.director.name];;
+      return [show.overview, show.first_air_date, show.vote_average, show.genres];
     }    
   };
   
