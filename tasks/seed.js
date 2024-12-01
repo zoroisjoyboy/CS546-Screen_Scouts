@@ -23,8 +23,8 @@ async function main() {
 
     // insert moviesData.json and showsData.json into mongodb
     try {
-        let moviesJsonString = fs.readFileSync('./moviesData.json');;
-        let showJsonString = fs.readFileSync('./showsData.json');
+        let moviesJsonString = fs.readFileSync('../moviesData.json');;
+        let showJsonString = fs.readFileSync('../showsData.json');
 
         const moviesData = JSON.parse(moviesJsonString);
         const showsData = JSON.parse(showJsonString);
@@ -40,8 +40,8 @@ async function main() {
     } catch (e) {
         console.error('Error occured while inserting data: ', e);
     } finally {
-        await closeConnection();
-    }
+       await closeConnection();
+   }
 }
 
 main();
