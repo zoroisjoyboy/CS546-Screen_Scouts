@@ -53,13 +53,10 @@ router
     //code here for POST
     const {media_id} = req.body;
     try {      
-        const media_movie = await mediaData.getMovieById(media_id);        
-        let media =null;
-        if(media_movie){      
-            media = media_movie;
-        } else{
-            const media_show = await mediaData.getShowById(media_id);
-            media = media_show;
+        let media = await mediaData.getShowById(media_id);        
+        if(!media){      
+            media = await mediaData.getMovieById(media_id);
+            //media = media_show;
         }
         if(media){
             //return res.json(media);
@@ -75,10 +72,10 @@ router
   });
 
   router
-  .route('/new')
+  .route('/newShow')
   .get(async (req, res) => {
     try {
-      res.render('media/add');
+      res.render('media/addShow');
       //return res.json(media); 
     } catch (e) {
       return res.status(500).send(e);
@@ -92,16 +89,46 @@ router
       const media = await mediaData.addMovie(title, overview, rating, airDate);
       //req.session.user = user;
       if (!media) {
-        res.status(400).render('media/add', { error: 'Invalid search.' });
+        res.status(400).render('media/addShow', { error: 'Invalid search.' });
         return;
       }     
       res.render('media/view',{media});
       //return res.json(media); 
     
     } catch (e) {
-      return res.status(400).render('media/add', { error: e });
+      return res.status(400).render('media/addShow', { error: e });
     }
   });
+
+  router
+  .route('/newMovie')
+  .get(async (req, res) => {
+    try {
+      res.render('media/addMovie');
+      //return res.json(media); 
+    } catch (e) {
+      return res.status(500).send(e);
+    }
+  })
+
+  .post(async (req, res) => {
+    //code here for POST
+    const {title, overview, rating, airDate} = req.body;
+    try {      
+      const media = await mediaData.addMovie(title, overview, rating, airDate);
+      //req.session.user = user;
+      if (!media) {
+        res.status(400).render('media/addMovie', { error: 'Invalid search.' });
+        return;
+      }     
+      res.render('media/view',{media});
+      //return res.json(media); 
+    
+    } catch (e) {
+      return res.status(400).render('media/addMovie', { error: e });
+    }
+  });
+
 
   router
   .route('/movies')

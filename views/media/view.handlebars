@@ -2,13 +2,24 @@
 <ul>
        <li>
             {{#if media.release_date }}
-            <div><h2>{{media.title}}</h2>
+            <div><h2>Title: {{media.title}}</h2>
             </div>
             {{else}}
             <div><h2>{{media.name}}</h2>  
             {{/if}}
+
+            {{#if media.overview}}
             <p>Synopsis: {{media.overview}}</p>
+            {{else}}
+            <p>Synopsis: Informatin not available</p>  
+            {{/if}}
+    
+             {{#if media.vote_average }}
             <p>Rating: {{media.vote_average}}</p>
+            {{else}}
+            <p>Rating: Not rated</p>  
+            {{/if}}
+
             <p>Genre: {{{media.genres.name}}}</p>
             {{#if media.director.name}}
             <p>Director/Creator: {{media.director.name}}</p>

@@ -1,0 +1,16 @@
+<h1>Add a new Show</h1>
+<form action="/media/newShow" method="POST">
+    <input type="text" name="title" id ="title" placeholder="Title" required>
+    <textarea name="overview" id ="overview" placeholder="Synopsis" required></textarea>
+    <input type="text" id="rating" placeholder="Rating" required>
+    <select name="type">
+        <option value="movie">Movie</option>
+        <option value="show">Show</option>
+    </select>
+    <input type="date" name="airedDate" id="airedDate" required>
+    <button type="submit">Add</button>
+</form>
+
+<div>
+<a href="/media"> Back to Search</a>
+</div> 

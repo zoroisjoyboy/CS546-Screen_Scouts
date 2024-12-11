@@ -5,7 +5,7 @@ import validation from './validation.js';
 let exportedMethods = {
     async getAllMovies() {
       const movieCollection = await movies();
-      const movieList = await movieCollection.find({}).limit(15).toArray();
+      const movieList = await movieCollection.find({}).sort({release_date: -1}).limit(100).toArray();
       return movieList;
     },
     async getMovieById(movie_title) {
@@ -17,7 +17,7 @@ let exportedMethods = {
     },
     async getAllShows() {
         const showCollection = await shows();
-        const showList = await showCollection.find({}).limit(25).toArray();
+        const showList = await showCollection.find({}).sort({first_air_date: -1}).limit(100).toArray();
         return showList;
       },
       async getShowById(show_title) {
@@ -37,7 +37,7 @@ let exportedMethods = {
         //vote_average = validation.checkString(vote_average, 'vote_average');
         genres = validation.checkString(genres, 'genres');    
         
-        let newMovie = {
+        let newMovie = { 
           title,
           overview,          
           vote_average,

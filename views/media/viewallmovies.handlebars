@@ -1,33 +1,40 @@
 <h1>Media List </h1>
 <ul>
 <div><a href="/media"> Click to search for a movie/show</a></div>
-<a href="/media"> Click here to view the list of all shows</a> 
+<a href="/media/allshows"> Click here to view the list of all shows</a> 
     {{#each media}}
         <li>
             {{#if media.release_date }}
-            <div><h2>{{media.title}}</h2>
-            </div>
+            <p>Title: {{media.title}}</p>
             {{else}}
-            <div><h2>{{this.name}}</h2>  
+            <p>Title: Unknown</p>  
             {{/if}}
-            <p>Synopsis: {{this.overview}}</p>
+
+            {{#if this.overview}}
+           <p>Synopsis: {{this.overview}}</p>
+            {{else}}
+           <p>Synopsis: Information not available</p> 
+            {{/if}}  
+
+            {{#if this.vote_average}}
             <p>Rating: {{this.vote_average}}</p>
+            {{else}}
+             <p>Rating: Rating information not available</p>  
+            {{/if}}  
+
             <p>Genre: {{{this.genres.name}}}</p>
             {{#if this.director.name}}
             <p>Director/Creator: {{this.director.name}}</p>
             {{else}}
             <p>Director/Creator: Unknown</p>   
-            {{/if}}     
-            
-            {{#if this.release_date }}
+            {{/if}}                 
+        
             <p>Type: Movie </p>
-            {{else}}
-            <p>Type: Show </p>   
-            {{/if}}             
+                        
             {{#if this.release_date }}
             <p>Aired Date: {{this.release_date}}</p>
             {{else}}
-            <p>Aired Date: {{this.first_air_date}}</p>   
+            <p>Aired Date: Information not available</p>   
             {{/if}}         
         </li>
     {{/each}}
