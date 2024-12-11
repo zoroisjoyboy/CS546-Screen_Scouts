@@ -17,7 +17,7 @@ router.route('/').get(async (req, res) => {
     }
 });
 
-router.route('/user/:id').get(async (req, res) => {
+router.route('/user/:id').get(async (req, res) => { // id is username
   let userId;
   try {
     userId = isValidID(req.params.id);
