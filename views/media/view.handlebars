@@ -1,0 +1,38 @@
+<h1>Media List </h1>
+<ul>
+       <li>
+            {{#if media.release_date }}
+            <div><h2>{{media.title}}</h2>
+            </div>
+            {{else}}
+            <div><h2>{{media.name}}</h2>  
+            {{/if}}
+            <p>Synopsis: {{media.overview}}</p>
+            <p>Rating: {{media.vote_average}}</p>
+            <p>Genre: {{{media.genres.name}}}</p>
+            {{#if media.director.name}}
+            <p>Director/Creator: {{media.director.name}}</p>
+            {{else}}
+            <p>Director/Creator: Unknown</p>   
+            {{/if}}     
+            
+            {{#if media.release_date }}
+            <p>Type: Movie </p>
+            {{else}}
+            <p>Type: Show </p>   
+            {{/if}}             
+            {{#if media.release_date }}
+            <p>Aired Date: {{media.release_date}}</p>
+            {{else}}
+            <p>Aired Date: {{media.first_air_date}}</p>   
+            {{/if}}         
+        </li>
+   
+</ul>
+<div>
+<a href="/media"> Click here to Search Again</a>
+</div> 
+<div>...........................................................</div>
+<div><a href="/media/allmovies">Click here to see the list of all movies!</a></div>
+<div>...........................................................</div>
+<div></div><div><a href="/media/allshows">Click here to see the list of all shows!</a></div>

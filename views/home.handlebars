@@ -1,0 +1,9 @@
+<h2>All Media</h2>
+<ul>
+    {{#each media}}
+    <li class="media-item">
+        <a href="/media/{{this.id}}">{{this.title}}</a> ({{this.type}})
+    </li>
+    {{/each}}
+</ul>
+<a href="/add"><button>Add Media</button></a>
