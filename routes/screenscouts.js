@@ -1,10 +1,7 @@
 /*import express from 'express'
 import {Router} from 'express';
 import {isValidID} from '../helpers.js';
-// import {} from '../data/whateverthefilenameis.js';
 
-
-const router = Router();
 
 router.route('/').get(async (req, res) => {
     //render the home.handlebars page if not then throw
