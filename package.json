@@ -20,7 +20,12 @@
   "homepage": "https://github.com/zoroisjoyboy/CS546-Screen_Scouts#readme",
   "description": "",
   "dependencies": {
+<<<<<<< HEAD
     "axios": "^1.7.9",
+=======
+    "bcrypt": "^5.1.1",
+    "date-fns": "^4.1.0",
+>>>>>>> e7994147149dbea245514f9b6a0207df1296af34
     "express": "^4.21.1",
     "express-handlebars": "^8.0.1",
     "mongodb": "^6.10.0"
