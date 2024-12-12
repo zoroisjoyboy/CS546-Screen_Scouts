@@ -1,13 +1,33 @@
 import express from 'express';
-import { addToWatchlist, getWatchlist} from './data.js';
-import { ObjectId } from 'mongodb';
-import { dbConnection } from './config/mongoConnection.js';
+import {addToWatchlist, getWatchlist} from './data/watchlist.js';
+import { ObjectId} from 'mongodb';
+import {dbConnection} from './config/mongoConnection.js';
 import screenscoutRoutes from './routes/screenscouts.js';
-
+import {engine} from 'express-handlebars';
 
 const app = express();
+app.engine('handlebars', engine());
+app.set('view engine', 'handlebars');
+app.set('views', './views');
+
 
 app.use(express.json());
+app.use(express.static('public'));
+app.use('/css', express.static('public/css')); // Serve CSS and nested files
+app.use('/js', express.static('public/js')); // Serve JavaScript
+
+
+
+app.use('/css', (req, res, next) => {
+  console.log(`Static CSS file requested: ${req.url}`);
+  next();
+});
+app.use('/js', (req, res, next) => {
+  console.log(`Static JS file requested: ${req.url}`);
+  next();
+});
+
+app.use('/', screenscoutRoutes);
 
 app.listen(3000, () => {
     console.log("We've now got a server!");

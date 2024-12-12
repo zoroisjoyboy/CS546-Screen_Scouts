@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+{{!-- <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -7,4 +7,45 @@
 </head>
 <body>
 </body>
-</html>
+</html> --}}
+
+<body>
+  <h1>{{name}}'s Profile</h1>
+  <p>Email: {{email}}</p>
+
+  <h2>Watchlist</h2>
+
+  {{#if watchlist.movies}}
+    <h3>Movies</h3>
+    <div class="watchlist-movies">
+      {{#each watchlist.movies}}
+        <div class="movie">
+          <img src="https://image.tmdb.org/t/p/w200{{posterPath}}" alt="{{title}} Poster">
+          <h4>{{title}}</h4>
+          <p>{{overview}}</p>
+          <p>Release Date: {{releaseDate}}</p>
+        </div>
+      {{/each}}
+    </div>
+  {{else}}
+    <p>No movies in the watchlist.</p>
+  {{/if}}
+
+  {{#if watchlist.shows}}
+    <h3>Shows</h3>
+    <div class="watchlist-shows">
+      {{#each watchlist.shows}}
+        <div class="show">
+          <img src="https://image.tmdb.org/t/p/w200{{posterPath}}" alt="{{name}} Poster">
+          <h4>{{name}}</h4>
+          <p>{{overview}}</p>
+          <p>First Air Date: {{firstAirDate}}</p>
+        </div>
+      {{/each}}
+    </div>
+  {{else}}
+    <p>No shows in the watchlist.</p>
+  {{/if}}
+
+  <a href="/">Back to Home</a>
+</body>

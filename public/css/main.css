@@ -1,0 +1,14 @@
+#results div {
+  margin-bottom: 20px;
+}
+
+#results img {
+  max-width: 100%;
+  height: auto;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+}
+
+#results h3 {
+  margin: 10px 0;
+}

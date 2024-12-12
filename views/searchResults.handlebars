@@ -1,0 +1,12 @@
+<h1>{{title}}</h1>
+<p>Results for "{{searchByTitle}}"</p>
+
+<ul>
+  {{#each movies}}
+    <li>
+      <img src="https://image.tmdb.org/t/p/w200{{this.poster_path}}" alt="{{this.title}}" />
+      <h3>{{this.title}}{{this.name}}</h3>
+      <a href="/getmovie/{{this.id}}?type={{this.media_type}}">View Details</a>
+    </li>
+  {{/each}}
+</ul>

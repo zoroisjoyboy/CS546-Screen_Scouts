@@ -1,37 +1,49 @@
 import express from 'express'
 import {Router} from 'express';
 import {isValidID} from '../helpers.js';
-import { addToWatchlist, getWatchlist} from '../data.js';
-import { users } from '../config/mongoCollections.js';
-import { ObjectId } from 'mongodb';
-
+import {addToWatchlist, getWatchlist} from '../data/watchlist.js';
+import { searchMoviesByTitle, getMovieById} from '../data/watchlist.js';
+import {users} from '../config/mongoCollections.js';
+import {ObjectId} from 'mongodb';
+import axios from 'axios';
 
 const router = Router();
 
-router.route('/').get(async (req, res) => {
-    //render the home.handlebars page if not then throw
-    try {
-      res.render('home', {title: 'Home'});
-    }
-    catch(e) {
-      console.log('Cannot get homepage');
-      res.status(500).send('There was an error getting the homepage');
-    }
-});
+router.get('/', async (req, res) => {
+  try{ 
+  console.log('Home route accessed');
+  res.render('home', {title: 'Home'});
+} catch (e) {
+  console.log('Cannot get homepage');
+  res.status(500).send('There was an error getting the homepage');
+}
+})
 
-router.route('/user/:id').get(async (req, res) => {
-  let userId;
+const mediaKey = '59aac710b6daa17177d2087697f25bd7';
+router.get('/search', async (req, res) => {
   try {
-    userId = isValidID(req.params.id);
-  } catch (e) {
-    res.status(404).render('error');
-  }
-  try {
-    res.status(200).render('userProfile', {
-      userId: userId
+    const searchTerm = req.query.query;
+    const page = parseInt(req.query.page, 10) || 1;
+
+    if (!searchTerm) {
+      return res.status(400).json({ error: 'Search term is required' });
+    }
+
+    const response = await axios.get('https://api.themoviedb.org/3/search/multi', {
+      params: {
+        api_key: mediaKey,
+        query: searchTerm,
+        page,
+      },
     });
-  } catch (e) {
-    res.status(500).render('error');
+
+    res.status(200).json({
+      results: response.data.results,
+      total_pages: response.data.total_pages,
+    });
+  } catch (error) {
+    console.error('Error searching TMDb API:', error.message);
+    res.status(500).json({ error: 'Failed to fetch search results' });
   }
 });
 
@@ -39,7 +51,7 @@ router.post('/watchlist', async (req, res) => {
   try {
     const { userId, mediaId, type } = req.body;
 
-    // Validate IDs
+    // get valid ids
     if (!ObjectId.isValid(userId)) throw `Invalid userId: ${userId}`;
     if (!ObjectId.isValid(mediaId)) throw `Invalid mediaId: ${mediaId}`;
     console.log('Validated IDs:', { userId, mediaId, type });
@@ -63,30 +75,69 @@ router.post('/watchlist', async (req, res) => {
   router.get('/user/:userId', async (req, res) => {
     try {
       const userId = req.params.userId;
-      console.log('Fetching profile for userId:', req.params.userId);
+      console.log('Getting profile for userId:', userId);
   
-      // Validate the userId
-      if (!ObjectId.isValid(userId)) throw 'Invalid userId';
+      // get valid the userId
+      if (!ObjectId.isValid(userId)) throw new Error('Invalid userId');
   
       const usersCollection = await users();
-  
-      // Fetch the user's profile
       const user = await usersCollection.findOne({ _id: new ObjectId(userId) });
-      console.log('User getting from db:', user);
   
-      if (!user) throw `User with ID '${userId}' does not exist.`;
+      if (!user) throw new Error(`User with ID '${userId}' does not exist.`);
   
-      // Respond with the user profile, including the watchlist
-      res.status(200).json({
+      const watchlist = await getWatchlist(userId);
+  
+      res.render('userProfile', {
+        title: `${user.name}'s Profile`,
         name: user.name,
         email: user.email,
-        watchlist: user.watchlist || [], // Return an empty array if watchlist is undefined
+        //passing the watchlist data 
+        watchlist, 
       });
     } 
-    catch (e) {
-      console.error('Error obtaining user profile:', e);
-      res.status(400).json({ error: e?.toString() || 'Unknown error occurred' });
+    catch (error) {
+      console.error('Error obtaining user profile:', error);
+      res.status(500).render('error', { message: 'Failed to load user profile.' });
     }
   });
- 
+     
+  router.route('/moviesearch').post(async (req, res) => {
+    const searchByTitle = (req.body && req.body.searchByTitle && req.body.searchByTitle.trim()) || '';
+  
+    if (!searchByTitle) {
+      return res.status(400).render('error', { message: 'Please provide a search term!' });
+    }
+  
+    try {
+      const movies = await searchMoviesByTitle(searchByTitle);
+  
+      if (movies.length === 0) {
+        return res.status(404).render('error', { message: `No results found for "${searchByTitle}"` });
+      }
+  
+      res.render('searchResults', { title: 'Search Results', searchByTitle, movies });
+    } catch (e) {
+      console.error('Error fetching search results:', e);
+      res.status(500).render('error', { message: 'An error occurred while fetching search results' });
+    }
+  });
+
+  router.route('/getmovie/:id').get(async (req, res) => {
+    const movieId = req.params.id;
+    const type = req.query.type || 'movie'; 
+  
+    try {
+      const movie = await getMovieById(movieId, type);
+  
+      if (!movie) {
+        return res.status(404).render('error', { message: 'No movie/show found with that ID' });
+      }
+  
+      res.render('getmovie', { title: movie.title || movie.name, movie });
+    } catch (e) {
+      console.error('Error fetching movie/show details:', e);
+      res.status(500).render('error', { message: 'An error occurred while fetching movie/show details' });
+    }
+  });
+  
   export default router;

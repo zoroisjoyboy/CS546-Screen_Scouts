@@ -1,0 +1,22 @@
+<body>
+
+  <h1>{{title}}</h1>
+  <p>Welcome to Screen Scouts! Use the search bar below to find movies and shows.</p>
+
+  <!-- Search Form -->
+  <form id="searchForm">
+    <input type="text" id="searchInput" placeholder="Enter movie or show name" required>
+    <button type="submit">Search</button>
+  </form>
+
+  <!-- Hidden userId input -->
+  <input type="hidden" id="userId" value="{{userId}}">
+
+  <!-- Search Results -->
+  <div id="results"></div>
+  <div id="pagination" style="margin-top: 20px;"></div>
+
+  <script src="/js/search.js"></script> 
+</body>
+
+
