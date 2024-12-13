@@ -1,10 +1,17 @@
 import express from 'express';
+<<<<<<< Updated upstream
 import {addToWatchlist, getWatchlist} from './data/watchlist.js';
 import { ObjectId} from 'mongodb';
 import {dbConnection} from './config/mongoConnection.js';
 import screenscoutRoutes from './routes/screenscouts.js';
 import {engine} from 'express-handlebars';
 
+=======
+import session from 'express-session';
+import {create} from 'express-handlebars';
+//import myMiddleware from './middleware.js';
+import myMiddleware from './middleware.js';
+>>>>>>> Stashed changes
 const app = express();
 app.engine('handlebars', engine());
 app.set('view engine', 'handlebars');
@@ -17,6 +24,7 @@ app.use('/css', express.static('public/css')); // Serve CSS and nested files
 app.use('/js', express.static('public/js')); // Serve JavaScript
 
 
+<<<<<<< Updated upstream
 
 app.use('/css', (req, res, next) => {
   console.log(`Static CSS file requested: ${req.url}`);
@@ -28,6 +36,21 @@ app.use('/js', (req, res, next) => {
 });
 
 app.use('/', screenscoutRoutes);
+=======
+const hbs = create({
+    helpers: {
+        encodeURIComponent: function (value) {
+            return encodeURIComponent(value);
+        }
+    }
+});
+
+app.engine('handlebars', hbs.engine);
+app.set('view engine', 'handlebars');
+
+app.use(myMiddleware);
+configRoutesFunction(app);
+>>>>>>> Stashed changes
 
 app.listen(3000, () => {
     console.log("We've now got a server!");
