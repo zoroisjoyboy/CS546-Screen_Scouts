@@ -2,7 +2,7 @@ $(document).ready(() => {
   let currentPage = 1;
   let searchTerm = '';
 
-  const fetchSearchResults = async (page = 1) => {
+  const theSearchResults = async (page = 1) => {
     try {
       const response = await $.ajax({
         url: `/search`,
@@ -10,7 +10,7 @@ $(document).ready(() => {
         data: { query: searchTerm, page },
       });
 
-      // Display search results
+      // display search results
       $('#results').empty();
       response.results.forEach((item) => {
         let title;
@@ -39,13 +39,19 @@ $(document).ready(() => {
         `);
       });
 
-      // Update pagination controls
+      // Update page controls
       $('#pagination').empty();
       if (response.total_pages > 1) {
         for (let i = 1; i <= response.total_pages; i++) {
-          const activeClass = i === page ? 'active' : '';
+          let activePage;
+            if (i === page) {
+                 activePage = 'active';
+            } 
+            else {
+              activePage = '';
+            }
           $('#pagination').append(`
-            <button class="pagination-btn ${activeClass}" data-page="${i}">${i}</button>
+            <button class="pagination-btn ${activePage}" data-page="${i}">${i}</button>
           `);
         }
       }
@@ -64,14 +70,14 @@ $(document).ready(() => {
       return;
     }
     currentPage = 1;
-    fetchSearchResults(currentPage); // Fetch the first page
+    theSearchResults(currentPage); // Fetch the first page
   });
 
   // Handle pagination button click
   $('#pagination').on('click', '.pagination-btn', function () {
     const page = $(this).data('page');
     currentPage = page;
-    fetchSearchResults(currentPage);
+    theSearchResults(currentPage);
   });
 
   // Add to watchlist

@@ -42,8 +42,8 @@ router.get('/search', async (req, res) => {
       total_pages: response.data.total_pages,
     });
   } catch (error) {
-    console.error('Error searching TMDb API:', error.message);
-    res.status(500).json({ error: 'Failed to fetch search results' });
+    console.error('Error searching:', error.message);
+    res.status(500).json({ error: 'Failed to get search results' });
   }
 });
 
@@ -56,7 +56,7 @@ router.post('/watchlist', async (req, res) => {
     if (!ObjectId.isValid(mediaId)) throw `Invalid mediaId: ${mediaId}`;
     console.log('Validated IDs:', { userId, mediaId, type });
 
-    // Call the addToWatchlist function
+    // call the addToWatchlist function
     const result = await addToWatchlist(userId, mediaId, type);
     console.log('addToWatchlist result:', result);
 
@@ -65,9 +65,10 @@ router.post('/watchlist', async (req, res) => {
     } else {
       res.status(200).json({ success: false, message: 'Media already exists in the watchlist.' });
     }
-  } catch (e) {
+  } 
+  catch (e) {
     console.error('Error in POST /watchlist:', e);
-    res.status(400).json({ error: e?.toString() || 'Unknown error occurred' });
+    res.status(400).json({ error: e.toString()});
   }
 });
 
@@ -89,15 +90,14 @@ router.post('/watchlist', async (req, res) => {
   
       res.render('userProfile', {
         title: `${user.name}'s Profile`,
-        name: user.name,
         email: user.email,
         //passing the watchlist data 
         watchlist, 
       });
     } 
     catch (error) {
-      console.error('Error obtaining user profile:', error);
-      res.status(500).render('error', { message: 'Failed to load user profile.' });
+      console.error('Error getting user profile:', error);
+      res.status(500).render('error', { message: 'Failed to get user profile.' });
     }
   });
      

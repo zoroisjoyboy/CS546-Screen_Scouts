@@ -78,23 +78,49 @@ app.listen(3000, () => {
   // };
   //   testFunctions();
     
-  const testFunctions = async () => {
-    try {
-      // Test adding to the watchlist
-      // console.log('Testing addToWatchlist');
-      const addResult = await addToWatchlist('6750f0220e36813d32e141e0', '674bc0f05e7275d29c82c80f', 'movie');
-      console.log('addToWatchlist Result:', addResult);
+  // const testFunctions = async () => {
+  //   try {
+  //     // Test adding to the watchlist
+  //     // console.log('Testing addToWatchlist');
+  //     const addResult = await addToWatchlist('6750f0220e36813d32e141e0', '674bc0f05e7275d29c82c80f', 'movie');
+  //     console.log('addToWatchlist Result:', addResult);
 
-      const addanotherResult = await addToWatchlist('6750f0220e36813d32e141e0', '674bc0f15e7275d29c82ef21', 'show');
-      console.log('addToWatchlist Result:', addanotherResult);
+  //     const addanotherResult = await addToWatchlist('6750f0220e36813d32e141e0', '674bc0f15e7275d29c82ef21', 'show');
+  //     console.log('addToWatchlist Result:', addanotherResult);
   
-      // Test fetching the watchlist
-      console.log('Testing getWatchlist');
-      const watchlist = await getWatchlist('6750f0220e36813d32e141e0');
-      console.log('getWatchlist Result:', watchlist);
-    } 
-    catch (error) {
-      console.error('Test failed with error:', error);
-    }
-  };
-    testFunctions();
+  //     // Test fetching the watchlist
+  //     console.log('Testing getWatchlist');
+  //     const watchlist = await getWatchlist('6750f0220e36813d32e141e0');
+  //     console.log('getWatchlist Result:', watchlist);
+  //   } 
+  //   catch (error) {
+  //     console.error('Test failed with error:', error);
+  //   }
+  // };
+  //   testFunctions();
+
+    const testFunctions = async () => {
+      try {
+        // Test adding to the watchlist
+        // console.log('Testing addToWatchlist');
+        const addResult = await addToWatchlist('675b490f2c6bb69df0de2eff', '674bc0f15e7275d29c82ef54', 'show');
+        console.log('addToWatchlist Result:', addResult);
+  
+        const addanotherResult = await addToWatchlist('675b490f2c6bb69df0de2eff', '674bc0f15e7275d29c82ef75', 'show');
+        console.log('addToWatchlist Result:', addanotherResult);
+
+        const addthirdResult = await addToWatchlist('675b490f2c6bb69df0de2eff', '674bc0f05e7275d29c82c813', 'movie');
+        console.log('addToWatchlist Result:', addthirdResult);
+
+    
+        // Test fetching the watchlist
+        console.log('Testing getWatchlist');
+        const watchlist = await getWatchlist('675b490f2c6bb69df0de2eff');
+        console.log('getWatchlist Result:', watchlist);
+      } 
+      catch (error) {
+        console.error('Test failed with error:', error);
+      }
+    };
+      testFunctions();
+  
