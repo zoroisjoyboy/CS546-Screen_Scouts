@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>"Sign Up Page"</title>
+    <link rel="stylesheet" href="/public/css/main.css">
+</head>
+
+<body>
+    <div id="signupView">
+      <h1>Sign Up</h1>
+
+      {{#if error}}
+          <p id="errorMessage" style="color: red;">{{error}}</p>
+      {{/if}}
+
+      <form id="signup-form" name="signup-form" method="POST" action="/signupuser">
+
+        <div>
+          <label for="email">Email:</label>
+          <input type="text" id="email" name="email">
+        </div>
+
+        <div>
+          <label for="firstName">First Name:</label>
+          <input type="text" id="firstName" name="firstName">
+        </div>
+
+        <div>
+          <label for="lastName">Last Name:</label>
+          <input type="text" id="lastName" name="lastName">
+        </div>
+
+        <div>
+          <label for="userName">Username:</label>
+          <input type="text" id="userName" name="userName">
+        </div>
+
+        <div>
+          <label for="password">Password:</label>
+          <input type="password" id="password" name="password">
+        </div>
+
+        <div>
+          <label for="confirmPassword">Confirm Password:</label>
+          <input type="password" id="confirmPassword" name="confirmPassword">
+        </div>
+
+        <div>
+          <label for="birthday">Birthday:</label>
+          <input type="date" id="birthday" name="birthday">
+        </div>
+
+        <div>
+          <label for="profilePic">Choose a Profile Picture:</label>
+          <div id="profilePics">
+            {{#each profilePics}}
+              <label>
+                <input type="radio" name="profilePic" value="{{this}}">
+                <img src="/public/assets/profilepics/{{this}}" alt="Profile Picture" width="50" height="50">
+              </label>
+            {{/each}}
+          </div>
+        </div>
+      
+        <div>
+          <button type="submit" id="submitButton" name="submitButton">Sign Up</button>
+        </div>
+      </form>
+
+      <div>
+        <a href="/signinuser">Already have an account? Click here to sign-in</a>
+      </div>
+    </div>
+</body>
+</html>
