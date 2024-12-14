@@ -1,5 +1,5 @@
 import {Router} from 'express';
-import { mediaData } from '../data/index.js';
+// import { mediaData } from '../data/index.js';
 
 const router = Router();
 

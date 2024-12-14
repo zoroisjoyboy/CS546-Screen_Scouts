@@ -28,6 +28,7 @@ router.route('/').get(async (req, res) => {
 
 const mediaKey = '59aac710b6daa17177d2087697f25bd7';
 router.get('/search', async (req, res) => {
+  console.log("dude");
   try {
     const searchTerm = req.query.query;
     const page = parseInt(req.query.page, 10) || 1;
@@ -81,6 +82,9 @@ router.post('/watchlist', async (req, res) => {
 
 
   router.get('/user/:userId', async (req, res) => {
+    if (!req.session || !req.session.user) {
+      return res.redirect('/signinuser');
+    }
     try {
       const userId = req.params.userId;
       console.log('Getting profile for userId:', userId);
@@ -96,8 +100,7 @@ router.post('/watchlist', async (req, res) => {
       const watchlist = await getWatchlist(userId);
   
       res.render('userProfile', {
-        title: `${user.name}'s Profile`,
-        email: user.email,
+        user,
         //passing the watchlist data 
         watchlist, 
       });
@@ -167,6 +170,17 @@ router.post('/watchlist', async (req, res) => {
     });
 })
 .post(async (req, res) => {
+  const profilePics = [
+    'profilePic1.png',
+    'profilePic2.png',
+    'profilePic3.png',
+    'profilePic4.png',
+    'profilePic5.png',
+    'profilePic6.png',
+    'profilePic7.png',
+    'profilePic8.png'
+  ];
+
 
   let { email, firstName, lastName, userName, password, confirmPassword, birthday, profilePic } = req.body;
 
@@ -189,14 +203,18 @@ router.post('/watchlist', async (req, res) => {
     );
 
     if (registrationResult.registrationCompleted) {
-      return res.redirect('/signinuser');
+      return res.redirect('/');
     } else {
       return res.status(500).render('signupuser', {
+        profilePics,
         error: 'Internal server error' 
       });
     }
   } catch (error) {
-    return res.status(400).render('signupuser', { error });
+    return res.status(400).render('signupuser', { 
+      profilePics,
+      error 
+    });
   }
 });
 
@@ -218,6 +236,7 @@ router
     const user = await signInUser(userName, password);
     if (user) {
       req.session.user = {
+        _id: user._id,
         email: user.email,
         firstName: user.firstName,
         lastName: user.lastName,
@@ -226,7 +245,7 @@ router
         profilePic: user.profilePic
       };
       let userId = user._id.toString();
-      return res.status(200).json({ userId });
+      return res.status(200).redirect(`/user/${userId}`);
     }
   } catch (error) {
     return res.status(400).render('signinuser', { error });

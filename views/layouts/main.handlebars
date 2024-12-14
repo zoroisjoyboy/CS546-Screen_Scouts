@@ -19,6 +19,7 @@
           <div class="user-info">
             <img src="/public/assets/profilepics/{{user.profilePic}}" alt="Profile Picture" class="profile-pic">
             <span class="username">{{user.userName}}</span>
+            <a href="/user/{{user._id}}" class="signout-btn">User Profile</a>
             <a href="/signoutuser" class="signout-btn">Sign Out</a>
           </div>
         {{else}}

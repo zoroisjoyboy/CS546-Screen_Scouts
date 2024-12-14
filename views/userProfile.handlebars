@@ -1,30 +1,30 @@
-{{!-- <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>User Page</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{title}}</title>
     <link rel="stylesheet" href="/public/css/main.css">
 </head>
 <body>
-</body>
-</html> --}}
+    <h1>{{user.userName}}'s Profile</h1>
+    <p>Email: {{user.email}}</p>
 
-
-  <h1>{{name}}'s Profile</h1>
-  <p>Email: {{email}}</p>
-
-  <h2>Watchlist</h2>
-  <div id="watchlist" class="watchlist-display"></div>
-  {{#if watchlist.length}}
-   {{#each watchlist}}
+    <h2>Watchlist</h2>
+    <div id="watchlist" class="watchlist-display"></div>
+    {{#if watchlist.length}}
+    {{#each watchlist}}
     <div class="watchlist-movies">
         <div class="media-item">
-          <img src="https://image.tmdb.org/t/p/w200{{posterPath}}" alt="{{title}} Poster">
-          <p>{{title}}</p>
+            <img src="https://image.tmdb.org/t/p/w200{{posterPath}}" alt="{{title}} Poster">
+            <p>{{title}}</p>
         </div>
-      {{/each}}
-  {{else}}
+        {{/each}}
+    {{else}}
     <p>No media in the watchlist.</p>
-  {{/if}}
-</div>
-  <a href="/">Back to Home</a>
+    {{/if}}
+    </div>
+    <a href="/">Back to Home</a>
+</body>
+</html>
+
