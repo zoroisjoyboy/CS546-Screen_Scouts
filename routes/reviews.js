@@ -107,7 +107,7 @@ router.post('/reviews', async (req, res) => {
 });
 
 //View all reviews for a movie or show
-router.get('/reviews/:mediaId', async (req, res) => {
+router.get('/reviewsgi/:mediaId', async (req, res) => {
     const { mediaId } = req.params;
 
     if (!mediaId) {
