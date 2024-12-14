@@ -1,5 +1,3 @@
-<<<<<<< Updated upstream
-=======
 import mediaRoutes from './media.js';
 import {static as staticDir} from 'express';
 
@@ -13,4 +11,3 @@ const constructorMethod = (app) => {
 };
 
 export default constructorMethod;
->>>>>>> Stashed changes
