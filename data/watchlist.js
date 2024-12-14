@@ -1,98 +1,159 @@
 import { ObjectId } from 'mongodb';
-import {shows} from './config/mongoCollections.js';
-import {movies} from './config/mongoCollections.js';
-import {users} from './config/mongoCollections.js';
-
+import {shows} from '../config/mongoCollections.js';
+import {movies} from '../config/mongoCollections.js';
+import {users} from '../config/mongoCollections.js';
+import axios from 'axios';
 
 
 export const addToWatchlist = async (userId, mediaId, type) => {
-    if (!ObjectId.isValid(userId) || !ObjectId.isValid(mediaId)) throw 'Invalid ID';
+  if (!ObjectId.isValid(userId)) throw 'Invalid userId';
+  if (!ObjectId.isValid(mediaId)) throw 'Invalid mediaId';
 
-    console.log('Starting addToWatchlist...');
-    console.log('Input data:', { userId, mediaId, type });
-  
-    // Validate IDs
-    if (!ObjectId.isValid(userId)) throw `Invalid userId: ${userId}`;
-    if (!ObjectId.isValid(mediaId)) throw `Invalid mediaId: ${mediaId}`;
-    console.log('Validated IDs:', { userId, mediaId });
-  
-  
-    const usersCollection = await users();
-    let mediaExists = false;
-  
-    if (type === 'movie') {
-      const moviesCollection = await movies();
-      mediaExists = await moviesCollection.findOne({ _id: new ObjectId (mediaId) });
-      console.log('Movie found:', mediaExists);
-    } 
-    else if (type === 'show') {
-      const showsCollection = await shows();
-      mediaExists = await showsCollection.findOne({ _id: new ObjectId (mediaId) });
-      console.log('Show found:', mediaExists);
-    }
-  
-    if (!mediaExists) throw `media of type '${type}' with ID '${mediaId}' does not exist.`;
+  const usersCollection = await users();
+  const moviesCollection = await movies();
+  const showsCollection = await shows();
 
-      // Check if the user exists and fetch their watchlist
   const user = await usersCollection.findOne({ _id: new ObjectId(userId) });
-  console.log('Got user:', user);
-  if (!user) throw `User with ID '${userId}' does not exist.`; 
+  if (!user) throw `User with ID '${userId}' does not exist.`;
 
-   // Ensure `watchlist` exists
-   if (!Array.isArray(user.watchlist)) {
-    console.log('Watchlist does not exist. Initializing as an empty array...');
-    user.watchlist = [];
+ // Check if the media item already exists in the user's watchlist
+ const alreadyExists = user.watchlist.some(
+  (item) => item.mediaId.equals(new ObjectId(mediaId)) && item.type === type
+);
+
+if (alreadyExists) {
+  console.log('Media already exists in the watchlist.');
+  return false; 
+}
+
+// Fetch media details from the appropriate collection
+let mediaDetails = null;
+if (type === 'movie') {
+  mediaDetails = await moviesCollection.findOne({ _id: new ObjectId(mediaId) });
+} else if (type === 'show') {
+  mediaDetails = await showsCollection.findOne({ _id: new ObjectId(mediaId) });
+} else {
+  throw new Error(`Invalid media type: ${type}`);
+}
+
+if (!mediaDetails) {
+  throw new Error(`Media with ID '${mediaId}' of type '${type}' does not exist.`);
+}
+
+// Add the media item to the user's watchlist
+const updateResult = await usersCollection.updateOne(
+  { _id: new ObjectId(userId) },
+  {
+    $addToSet: {
+      watchlist: {
+        mediaId: new ObjectId(mediaId),
+        type,
+        title: mediaDetails.title || mediaDetails.name,
+        posterPath: mediaDetails.poster_path,
+      },
+    },
+  }
+);
+
+if (updateResult.modifiedCount > 0) {
+  console.log('Media added to watchlist:', mediaDetails.title || mediaDetails.name);
+  return true; // Successfully added
+}
+
+return false; // No modification made
+};
+export const getWatchlist = async (userId) => {
+  if (!ObjectId.isValid(userId)) throw 'Invalid user ID';
+
+  const usersCollection = await users();
+  const user = await usersCollection.findOne({ _id: new ObjectId(userId) });
+
+  if (!user || !user.watchlist) return [];
+
+  const moviesCollection = await movies();
+  const showsCollection = await shows();
+
+  const watchlistDetails = [];
+
+  for (const item of user.watchlist) {
+      let mediaDetails = null;
+
+      if (item.type === 'movie') {
+          mediaDetails = await moviesCollection.findOne({ _id: new ObjectId(item.mediaId) });
+      } else if (item.type === 'show') {
+          mediaDetails = await showsCollection.findOne({ _id: new ObjectId(item.mediaId) });
+      }
+
+      if (mediaDetails) {
+          watchlistDetails.push({
+              title: mediaDetails.title || mediaDetails.name,
+              posterPath: mediaDetails.poster_path, 
+          });
+      }
   }
 
-    const alreadyExists = user.watchlist.some(
-      (item) => item.mediaId.equals(new ObjectId(mediaId)) && media.type === type
-    );
-    if (alreadyExists) {
-      console.log('Media already exists in the watchlist.');
-      return false; // Explicitly return false for no modification
-    }
-  
-
-    console.log('userId:', userId, 'mediaId:', mediaId, 'type:', type);
-
-    console.log('Adding media to watchlist...');
-    const result = await usersCollection.updateOne(
-   {_id: new ObjectId(userId) },// Match the user
-   {$addToSet: { watchlist: { mediaId: new ObjectId(mediaId), type}}}      
-    );
-    console.log('updateOne result:', result);
-  
-    return result.modifiedCount > 0;
-  };
+  return watchlistDetails;
+};
 
 
-  export const getWatchlist = async (userId) => {
-    if (!ObjectId.isValid(userId)) throw 'Invalid user ID';
+  export const searchMoviesByTitle = async (title) => {
+    const media_URL = 'https://api.themoviedb.org/3/search/multi';
+    const apiKey = '59aac710b6daa17177d2087697f25bd7';
+    const resultsPerPage = 20;
+    const maxResults = 50;
+    let results = [];
   
-    const usersCollection = await users();
-    const user = await usersCollection.findOne({ userId: new ObjectId(userId) });
+    try {
+      // get results page by page
+      for (let page = 1; results.length < maxResults; page++) {
+        const response = await axios.get('https://api.themoviedb.org/3/search/multi', {
+          params: {
+            api_key: apiKey,
+            query: title,
+            page,
+          },
+        });
   
-    if (!user || !user.Watchlist) 
-      return { movies: [], shows: [] };
+        if (response.data && response.data.results) {
+          results = results.concat(response.data.results);
   
-    const moviesCollection = await movies();
-    const showsCollection = await shows();
-  
-    const moviesDetails = [];
-    const showsDetails = [];
-  
-    // Process each item sequentially
-    for (const item of user.watchlist) {
-      if (item.type === 'movie') {
-        const movie = await moviesCollection.findOne({ _id: new ObjectId (item.mediaId) });
-        console.log('Got movie:', movie);
-        if (movie) moviesDetails.push(movie);
-      } else if (item.type === 'show') {
-        const show = await showsCollection.findOne({ _id: new ObjectId (item.mediaId) });
-        console.log('Got show:', show);
-        if (show) showsDetails.push(show);
+          // stop if all the results have been recieved
+          if (response.data.results.length < resultsPerPage) break;
+        } else {
+          break;
+        }
       }
-    }
   
-    return { movies: moviesDetails, shows: showsDetails };
+      return results.slice(0, maxResults); 
+    } 
+    catch (e) {
+      console.error(`Error searching TMDB API: ${e}`);
+      throw new Error('Failed to get search results');
+    }
   };
+
+
+export const getMovieById = async (id, type = 'movie') => {
+  const apiKey = '59aac710b6daa17177d2087697f25bd7'; // TMDB API key
+  let endpoint;
+  if (type === 'movie') {
+    endpoint = `/movie/${id}`;
+  } else {
+    endpoint = `/tv/${id}`;
+  }
+
+  try {
+    const response = await axios.get(`https://api.themoviedb.org/3${endpoint}`, {
+      params: { api_key: apiKey },
+    });
+
+    if (response.data) {
+      return response.data;
+    } else {
+      return null; // No data found
+    }
+  } catch (e) {
+    console.error(`Error getting movie/show details from TMDB: ${e}`);
+    throw new Error('Failed to get movie/show details');
+  }
+};

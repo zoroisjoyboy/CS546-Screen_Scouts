@@ -1,0 +1,37 @@
+
+<div  class="title"> Welcome to Screen Scouts!</div>
+<div  class="title-note"> Use the search bar below to find movies and TV shows.</div>
+
+
+<form id="search-form" method="POST" action="/search">
+  <label for="media_id">Media Search</label>
+  <input type="text" id="media_id" name="media_id" required/>
+   <button id="submit_button" name="submit_button">Submit</button>
+</form>
+
+
+
+<div class = "title-search">
+<form action="/allmovies" method="GET" style="display:contents">      
+  <button id="submit_button" name="submit_button" type="submit"> All Movies </button>
+</form>
+
+<form action="/allshows" method="GET" style="display:contents">      
+  <button id="submit_button" name="submit_button" type="submit"> All Shows </button>
+</form>
+
+<form action="/newMovie" method="GET" style="display:contents">      
+  <button id="submit_button" name="submit_button" type="submit"> Add Movie </button>
+</form>
+
+<form action="/newShow" method="GET" style="display:contents">      
+  <button id="submit_button" name="submit_button" type="submit"> Add Show </button>
+</form>
+</div>
+
+
+{{#if error}}<p>{{error}}</p>{{/if}}
+
+
+
+  

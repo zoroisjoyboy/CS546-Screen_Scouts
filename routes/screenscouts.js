@@ -1,12 +1,16 @@
-import express from 'express'
 import {Router} from 'express';
-import {isValidID} from '../helpers.js';
-import { addToWatchlist, getWatchlist} from '../data.js';
-import { users } from '../config/mongoCollections.js';
-import { ObjectId } from 'mongodb';
-
+import helpers from '../helpers.js';
+import * as middleware from '../middleware.js'
+import { signInUser, signUpUser } from '../data/users.js'; 
+import {addToWatchlist, getWatchlist} from '../data/watchlist.js';
+import { searchMoviesByTitle, getMovieById} from '../data/watchlist.js';
+import {users} from '../config/mongoCollections.js';
+import {ObjectId} from 'mongodb';
+import axios from 'axios';
 
 const router = Router();
+
+router.use(middleware.logRequestAndRedirectRoot);
 
 router.route('/').get(async (req, res) => {
   if (req.session && req.session.user) {
@@ -22,19 +26,31 @@ router.route('/').get(async (req, res) => {
   }
 });
 
-router.route('/user/:id').get(async (req, res) => {
-  let userId;
+const mediaKey = '59aac710b6daa17177d2087697f25bd7';
+router.get('/search', async (req, res) => {
   try {
-    userId = isValidID(req.params.id);
-  } catch (e) {
-    res.status(404).render('error');
-  }
-  try {
-    res.status(200).render('userProfile', {
-      userId: userId
+    const searchTerm = req.query.query;
+    const page = parseInt(req.query.page, 10) || 1;
+
+    if (!searchTerm) {
+      return res.status(400).json({ error: 'Search term is required' });
+    }
+
+    const response = await axios.get('https://api.themoviedb.org/3/search/multi', {
+      params: {
+        api_key: mediaKey,
+        query: searchTerm,
+        page,
+      },
     });
-  } catch (e) {
-    res.status(500).render('error');
+
+    res.status(200).json({
+      results: response.data.results,
+      total_pages: response.data.total_pages,
+    });
+  } catch (error) {
+    console.error('Error searching:', error.message);
+    res.status(500).json({ error: 'Failed to get search results' });
   }
 });
 
@@ -42,12 +58,12 @@ router.post('/watchlist', async (req, res) => {
   try {
     const { userId, mediaId, type } = req.body;
 
-    // Validate IDs
+    // get valid ids
     if (!ObjectId.isValid(userId)) throw `Invalid userId: ${userId}`;
     if (!ObjectId.isValid(mediaId)) throw `Invalid mediaId: ${mediaId}`;
     console.log('Validated IDs:', { userId, mediaId, type });
 
-    // Call the addToWatchlist function
+    // call the addToWatchlist function
     const result = await addToWatchlist(userId, mediaId, type);
     console.log('addToWatchlist result:', result);
 
@@ -56,46 +72,81 @@ router.post('/watchlist', async (req, res) => {
     } else {
       res.status(200).json({ success: false, message: 'Media already exists in the watchlist.' });
     }
-  } catch (e) {
+  } 
+  catch (e) {
     console.error('Error in POST /watchlist:', e);
-    res.status(400).json({ error: e?.toString() || 'Unknown error occurred' });
+    res.status(400).json({ error: e.toString()});
   }
 });
 
-router.get('/user/:userId', async (req, res) => {
-  try {
-    if (req.session.user) {
+
+  router.get('/user/:userId', async (req, res) => {
+    try {
       const userId = req.params.userId;
-      console.log('Fetching profile for userId:', req.params.userId);
+      console.log('Getting profile for userId:', userId);
   
-      // Validate the userId
-      if (!ObjectId.isValid(userId)) throw 'Invalid userId';
+      // get valid the userId
+      if (!ObjectId.isValid(userId)) throw new Error('Invalid userId');
   
       const usersCollection = await users();
-  
-      // Fetch the user's profile
       const user = await usersCollection.findOne({ _id: new ObjectId(userId) });
-      console.log('User getting from db:', user);
   
-      if (!user) throw `User with ID '${userId}' does not exist.`;
+      if (!user) throw new Error(`User with ID '${userId}' does not exist.`);
   
-      // Respond with the user profile, including the watchlist
-      res.status(200).json({
-        name: user.name,
+      const watchlist = await getWatchlist(userId);
+  
+      res.render('userProfile', {
+        title: `${user.name}'s Profile`,
         email: user.email,
-        watchlist: user.watchlist || [], // Return an empty array if watchlist is undefined
+        //passing the watchlist data 
+        watchlist, 
       });
-    } else {
-      return res.redirect('/');
+    } 
+    catch (error) {
+      console.error('Error getting user profile:', error);
+      res.status(500).render('error', { message: 'Failed to get user profile.' });
     }
-  }
-  catch (e) {
-    console.error('Error obtaining user profile:', e);
-    res.status(400).json({ error: e.toString() || 'Unknown error occurred' });
-  }
-});
+  });
+     
+  router.route('/moviesearch').post(async (req, res) => {
+    const searchByTitle = (req.body && req.body.searchByTitle && req.body.searchByTitle.trim()) || '';
+  
+    if (!searchByTitle) {
+      return res.status(400).render('error', { message: 'Please provide a search term!' });
+    }
+  
+    try {
+      const movies = await searchMoviesByTitle(searchByTitle);
+  
+      if (movies.length === 0) {
+        return res.status(404).render('error', { message: `No results found for "${searchByTitle}"` });
+      }
+  
+      res.render('searchResults', { title: 'Search Results', searchByTitle, movies });
+    } catch (e) {
+      console.error('Error fetching search results:', e);
+      res.status(500).render('error', { message: 'An error occurred while fetching search results' });
+    }
+  });
 
-router
+  router.route('/getmovie/:id').get(async (req, res) => {
+    const movieId = req.params.id;
+    const type = req.query.type || 'movie'; 
+  
+    try {
+      const movie = await getMovieById(movieId, type);
+  
+      if (!movie) {
+        return res.status(404).render('error', { message: 'No movie/show found with that ID' });
+      }
+  
+      res.render('getmovie', { title: movie.title || movie.name, movie });
+    } catch (e) {
+      console.error('Error fetching movie/show details:', e);
+      res.status(500).render('error', { message: 'An error occurred while fetching movie/show details' });
+    }
+  });
+  router
   .route('/signupuser')
   .get(middleware.redirectIfAuthenticated, async (req, res) => {
     const profilePics = [
@@ -115,81 +166,81 @@ router
       profilePics
     });
 })
-  .post(async (req, res) => {
+.post(async (req, res) => {
 
-    let { email, firstName, lastName, userName, password, confirmPassword, birthday, profilePic } = req.body;
+  let { email, firstName, lastName, userName, password, confirmPassword, birthday, profilePic } = req.body;
 
-    try {
-      if (!email || !firstName || !lastName || !userName || !password || !confirmPassword || !birthday || !profilePic) {
-        throw new Error("All fields are required");
-      }
-      if (password !== confirmPassword) {
-        throw new Error("Passwords do not match");
-      }
-
-      const registrationResult = await signUpUser(
-        email,
-        firstName,
-        lastName,
-        userName,
-        password,
-        birthday,
-        profilePic
-      );
-
-      if (registrationResult.registrationCompleted) {
-        return res.redirect('/signinuser');
-      } else {
-        return res.status(500).render('signupuser', {
-          error: 'Internal server error' 
-        });
-      }
-    } catch (error) {
-      return res.status(400).render('signupuser', { error });
+  try {
+    if (!email || !firstName || !lastName || !userName || !password || !confirmPassword || !birthday || !profilePic) {
+      throw new Error("All fields are required");
     }
+    if (password !== confirmPassword) {
+      throw new Error("Passwords do not match");
+    }
+
+    const registrationResult = await signUpUser(
+      email,
+      firstName,
+      lastName,
+      userName,
+      password,
+      birthday,
+      profilePic
+    );
+
+    if (registrationResult.registrationCompleted) {
+      return res.redirect('/signinuser');
+    } else {
+      return res.status(500).render('signupuser', {
+        error: 'Internal server error' 
+      });
+    }
+  } catch (error) {
+    return res.status(400).render('signupuser', { error });
+  }
 });
 
 router
-  .route('/signinuser')
-  .get(middleware.redirectIfAuthenticated, async (req, res) => {
-    if (req.session && req.session.user) {
-      return res.redirect('/');
-    }
-    res.render('signinuser');
-  })
-  .post(async (req, res) => {
-    let { userName, password } = req.body;
-    try {
+.route('/signinuser')
+.get(middleware.redirectIfAuthenticated, async (req, res) => {
+  if (req.session && req.session.user) {
+    return res.redirect('/');
+  }
+  res.render('signinuser');
+})
+.post(async (req, res) => {
+  let { userName, password } = req.body;
+  try {
 
-      userName = helpers.isValidString(userName, "Username");
-      password = helpers.isValidString(password, "Password");
+    userName = helpers.isValidString(userName, "Username");
+    password = helpers.isValidString(password, "Password");
 
-      const user = await signInUser(userName, password);
-      if (user) {
-        req.session.user = {
-          email: user.email,
-          firstName: user.firstName,
-          lastName: user.lastName,
-          userName: user.userName,
-          birthday: user.birthday,
-          profilePic: user.profilePic
-        };
-        let userId = user._id.toString();
-        return res.status(200).redirect(`/user/${userId}`);
-      }
-    } catch (error) {
-      return res.status(400).render('signinuser', { error });
+    const user = await signInUser(userName, password);
+    if (user) {
+      req.session.user = {
+        email: user.email,
+        firstName: user.firstName,
+        lastName: user.lastName,
+        userName: user.userName,
+        birthday: user.birthday,
+        profilePic: user.profilePic
+      };
+      let userId = user._id.toString();
+      return res.status(200).json({ userId });
     }
+  } catch (error) {
+    return res.status(400).render('signinuser', { error });
+  }
 });
 
 router.route('/signoutuser')
-  .get(middleware.checkSignOut, async (req, res) => {
-    req.session.destroy((err) => {
-      if (err) {
-        return res.status(500).send('Unable to sign out');
-      }
-      res.render('signoutuser');
-    });
+.get(middleware.checkSignOut, async (req, res) => {
+  req.session.destroy((err) => {
+    if (err) {
+      return res.status(500).send('Unable to sign out');
+    }
+    res.render('signoutuser');
+  });
 });
-
+  
 export default router;
