@@ -1,0 +1,68 @@
+{{#extends 'layouts/main'}}
+{{#content 'body'}}
+
+    <!--Recent Movies/Shows-->
+    <section>
+        <h2>Most Recently Released Movies</h2>
+        {{#if recentMovies}}
+        <ul>
+            {{#each recentMovies}}
+            <li>
+                <strong>{{title}}</strong> 
+                <br>Release Date: {{formatDate release_date}}
+                <br>Genres: {{#each genres}}{{this}}{{#unless @last}}, {{/unless}}{{/each}}
+                <br>Main Cast: {{#each main_cast}}{{this}}{{#unless @last}}, {{/unless}}{{/each}}
+            </li>
+            {{/each}}
+        </ul>
+        {{else}}
+        <p>No recent movies are available at this time.</p>
+        {{/if}}
+    </section>
+
+    <!--Trending Movies/Shows-->
+    <section>
+        <h2>Trending Movies and Shows</h2>
+        {{#if trendingMovies}}
+        <ul>
+            {{#each trendingMovies}}
+            <li>
+                <strong>{{title}}</strong>
+                <br>Release Date: {{formatDate release_date}}
+                <br>Genres: {{#each genres}}{{this}}{{#unless @last}}, {{/unless}}{{/each}}
+                <br>Main Cast: {{#each main_cast}}{{this}}{{#unless @last}}, {{/unless}}{{/each}}
+                <br>Popularity: {{popularity}}
+                <br>Vote Average: {{vote_average}}
+                <br>Vote Count: {{vote_count}}
+            </li>
+            {{/each}}
+        </ul>
+        {{else}}
+        <p>No trending movies available at the moment!</p>
+        {{/if}}
+    </section>
+
+    <!--Staff Recommendations-->
+    <section>
+        <h2>Staff Recommendations</h2>
+        {{#if staffRecMovies}}
+        <h3>Movies</h3>
+        <ul>
+            {{#each staffRecMovies}}
+            <li>
+                <strong>{{title}}</strong>
+                <br>Release Date: {{formatDate release_date}}
+                <br>Genres: {{#each genres}}{{this}}{{#unless @last}}, {{/unless}}{{/each}}
+                <br>Main Cast: {{#each main_cast}}{{this}}{{#unless @last}}, {{/unless}}{{/each}}
+                <br>Popularity: {{popularity}}
+                <br>Vote Average: {{vote_average}}
+                <br>Vote Count: {{vote_count}}
+            </li>
+            {{/each}}
+        </ul>
+        {{else}}
+        <p>No staff-recommended movies at the moment!</p>
+        {{/if}}
+    </section>
+{{/content}}
+

@@ -1,0 +1,42 @@
+<div id="review-form-container">
+    <h2>Please Write a Review</h2>
+    <form id="review-form">
+        <!--Select Between Media Option-->
+        <label for="mediaId">Select Movie/Show:</label>
+        <select id="mediaId" name="mediaId" required>
+            <option value="">-- Select Media --</option>
+            <option value="1">Movie 1</option>
+            <option value="2">Show 2</option>
+            <!--Populate dynamically if neeed-->
+        </select>
+
+        <!--Review Text-->
+        <label for="mediaId">Select Movie/Show:</label>
+        <select id="mediaId" name="mediaId" required>
+            <option value="">--Select Media --</option>
+            <option value="1">Movie 1</option>
+            <option value="2">Show 2</option>
+        </select>
+
+        <!--Review Text-->
+        <label for "reviewText">Your Review:</label>
+        <textarea id="reviewText" name="reviewText" rows="5" placeholder="Write your review here..." required></textarea>
+
+        <!--Rating-->
+        <label for="rating">Rating:</label>
+        <select id="rating" name="rating">
+            <option value="">--Select Rating --</option>
+            <option value="1">1 -- Poor</option>
+            <option value="2">2 -- Fair</option>
+            <option value="3">3 - Good</option>
+            <option value="4">4 - Very Good</option>
+            <option value="5">5 - Excellent</option>
+        </select>
+
+        <!--Buttons-->
+        <div class="form-buttons">
+            <button type="button" id="save-draft">Save as Draft</button>
+            <button type="submit" id="publish-review">Publish Review</button>
+        </div>
+    </form>
+</div>

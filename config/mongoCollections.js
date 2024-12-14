@@ -5,9 +5,14 @@ const getCollectionFn = (collection) => {
 
   return async () => {
     if (!_col) {
-      const db = await dbConnection();
-      _col = await db.collection(collection);
+      try { 
+        const db = await dbConnection();
+        _col = await db.collection(collection);
+    } catch (error) {
+      console.error("Could not connect to the database:", error);
+      throw new Error; "Rethrow the error after logging in"
     }
+  }
 
     return _col;
   };
