@@ -16,7 +16,7 @@ export const addToWatchlist = async (userId, mediaId, type) => {
   const user = await usersCollection.findOne({ _id: new ObjectId(userId) });
   if (!user) throw `User with ID '${userId}' does not exist.`;
 
- // Check if the media item already exists in the user's watchlist
+ // check if the media item already exists in the user's watchlist
  const alreadyExists = user.watchlist.some(
   (item) => item.mediaId.equals(new ObjectId(mediaId)) && item.type === type
 );
@@ -26,7 +26,7 @@ if (alreadyExists) {
   return false; 
 }
 
-// Fetch media details from the appropriate collection
+//get media details from the appropriate collection
 let mediaDetails = null;
 if (type === 'movie') {
   mediaDetails = await moviesCollection.findOne({ _id: new ObjectId(mediaId) });
@@ -54,13 +54,13 @@ const updateResult = await usersCollection.updateOne(
     },
   }
 );
-
+//check to see if the the results were added 
 if (updateResult.modifiedCount > 0) {
   console.log('Media added to watchlist:', mediaDetails.title || mediaDetails.name);
-  return true; // Successfully added
+  return true; 
 }
 
-return false; // No modification made
+return false; 
 };
 export const getWatchlist = async (userId) => {
   if (!ObjectId.isValid(userId)) throw 'Invalid user ID';
@@ -134,8 +134,7 @@ export const getWatchlist = async (userId) => {
 
 
 export const getMovieById = async (id, type = 'movie') => {
-  const apiKey = '59aac710b6daa17177d2087697f25bd7'; // TMDB API key
-  let endpoint;
+  const apiKey = '59aac710b6daa17177d2087697f25bd7'; 
   if (type === 'movie') {
     endpoint = `/movie/${id}`;
   } else {
@@ -150,7 +149,7 @@ export const getMovieById = async (id, type = 'movie') => {
     if (response.data) {
       return response.data;
     } else {
-      return null; // No data found
+      return null; 
     }
   } catch (e) {
     console.error(`Error getting movie/show details from TMDB: ${e}`);

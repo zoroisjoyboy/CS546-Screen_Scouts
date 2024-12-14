@@ -1,5 +1,6 @@
 // import mediaRoutes from './media.js';
 import userRoutes from './users.js';
+import mediaRoutes from './media.js';
 import {static as staticDir} from 'express';
 
 const constructorMethod = (app) => {

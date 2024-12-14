@@ -16,15 +16,41 @@
     {{#each watchlist}}
     <div class="watchlist-movies">
         <div class="media-item">
+<<<<<<< HEAD
             <img src="https://image.tmdb.org/t/p/w200{{posterPath}}" alt="{{title}} Poster">
             <p>{{title}}</p>
+=======
+          <img src="https://image.tmdb.org/t/p/w200{{posterPath}}" alt="{{title}} Poster">
+          <p>{{title}}</p>
+           <button class="watched-button">Watched</button>
+>>>>>>> b63d122593ebb6814c3b70735463aefe165d086b
         </div>
         {{/each}}
     {{else}}
     <p>No media in the watchlist.</p>
+<<<<<<< HEAD
     {{/if}}
     </div>
     <a href="/">Back to Home</a>
 </body>
 </html>
+=======
+  {{/if}}
+</div>
+
+  <h2>Watched List</h2>
+<div id="watched-list" class="watched-display">
+  {{#if watched.length}}
+    {{#each watched}}
+      <div class="media-item">
+        <img src="https://image.tmdb.org/t/p/w200{{posterPath}}" alt="{{title}} Poster">
+        <p>{{title}}</p>
+      </div>
+    {{/each}}
+  {{else}}
+    <p>No media in the watched list.</p>
+  {{/if}}
+</div>
+  <a href="/">Back to Home</a>
+>>>>>>> b63d122593ebb6814c3b70735463aefe165d086b
 
