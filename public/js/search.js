@@ -1,16 +1,18 @@
+//fully load the html file
 $(document).ready(() => {
   let currentPage = 1;
   let searchTerm = '';
 
   const theSearchResults = async (page = 1) => {
     try {
+      //ajax request to get the search term
       const response = await $.ajax({
         url: `/search`,
         method: 'GET',
         data: { query: searchTerm, page },
       });
 
-      // display search results
+      // display search results and add the watchlist button
       $('#results').empty();
       response.results.forEach((item) => {
         let title;
@@ -39,7 +41,7 @@ $(document).ready(() => {
         `);
       });
 
-      // Update page controls
+      // make buttons if there are multiple pages 
       $('#pagination').empty();
       if (response.total_pages > 1) {
         for (let i = 1; i <= response.total_pages; i++) {
@@ -61,9 +63,10 @@ $(document).ready(() => {
     }
   };
 
-  // Handle form submission
+  // submit the form 
   $('#searchForm').on('submit', (e) => {
-    e.preventDefault(); // Prevent form refresh
+    // stop page from refresh
+    e.preventDefault(); 
     searchTerm = $('#searchInput').val().trim();
     if (!searchTerm) {
       alert('Please enter a search term!');
@@ -73,18 +76,19 @@ $(document).ready(() => {
     theSearchResults(currentPage); // Fetch the first page
   });
 
-  // Handle pagination button click
+  // listn for button clicks and get the current page the user is on
   $('#pagination').on('click', '.pagination-btn', function () {
     const page = $(this).data('page');
     currentPage = page;
     theSearchResults(currentPage);
   });
 
-  // Add to watchlist
+  // add the media to watchlist
   $('#results').on('click', '.add-to-watchlist', async function () {
     const mediaId = $(this).data('id');
     const mediaType = $(this).data('type');
-    const userId = $('#userId').val(); // Get the logged-in user's ID from the hidden input
+  // get the logged-in user's ID from the hidden input
+    const userId = $('#userId').val(); 
 
     try {
       const response = await $.ajax({
@@ -108,4 +112,34 @@ $(document).ready(() => {
       alert('Failed to add to watchlist');
     }
   });
+});
+
+// move media to watched list
+$('#results').on('click', '.watched', async function () {
+  const mediaId = $(this).data('id');
+  const mediaType = $(this).data('type');
+  const userId = $('#userId').val(); // Get the logged-in user's ID from the hidden input
+
+  try {
+    const response = await $.ajax({
+      url: `/watched`,
+      method: 'POST',
+      contentType: 'application/json',
+      data: JSON.stringify({
+        userId,
+        mediaId,
+        type: mediaType,
+      }),
+    });
+
+    if (response.success) {
+      alert('Moved to Watched List!');
+      $(this).closest('div').remove(); // Remove the item from the watchlist display
+    } else {
+      alert('Failed to move to Watched.');
+    }
+  } catch (error) {
+    console.error('Error moving to Watched:', error);
+    alert('Failed to move to Watched.');
+  }
 });

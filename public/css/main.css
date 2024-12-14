@@ -13,30 +13,6 @@
   margin: 10px 0;
 }
 
-.watchlist-display {
-  display: flex;
-  flex-wrap: nowrap; /* No wrapping by default */
-  overflow-x: auto; /* Add horizontal scrolling for large watchlists */
-  gap: 20px; /* Space between items */
-  padding: 10px;
-}
-
-.media-item {
-  flex: 0 0 auto; /* Prevent shrinking, don't grow */
-  width: 200px; /* Set a fixed width */
-  text-align: center; /* Center align text and image */
-}
-
-.media-item img {
-  width: 100%; /* Make the image fill up */
-}
-
-.media-item p {
-  margin-top: 10px;
-  font-size: 14px;
-  color: #333; 
-  font-weight: bold;
-}
 
 body {
   background-color: yellow; 

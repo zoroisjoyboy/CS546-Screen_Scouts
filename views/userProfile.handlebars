@@ -21,10 +21,26 @@
         <div class="media-item">
           <img src="https://image.tmdb.org/t/p/w200{{posterPath}}" alt="{{title}} Poster">
           <p>{{title}}</p>
+           <button class="watched-button">Watched</button>
         </div>
       {{/each}}
   {{else}}
     <p>No media in the watchlist.</p>
   {{/if}}
 </div>
+
+  <h2>Watched List</h2>
+<div id="watched-list" class="watched-display">
+  {{#if watched.length}}
+    {{#each watched}}
+      <div class="media-item">
+        <img src="https://image.tmdb.org/t/p/w200{{posterPath}}" alt="{{title}} Poster">
+        <p>{{title}}</p>
+      </div>
+    {{/each}}
+  {{else}}
+    <p>No media in the watched list.</p>
+  {{/if}}
+</div>
   <a href="/">Back to Home</a>
+

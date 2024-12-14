@@ -72,6 +72,48 @@ router.post('/watchlist', async (req, res) => {
   }
 });
 
+router.post('/watched', async (req, res) => {
+  try {
+    const { userId, mediaId, type } = req.body;
+
+    if (!ObjectId.isValid(userId)) throw `Invalid userId: ${userId}`;
+    if (!ObjectId.isValid(mediaId)) throw `Invalid mediaId: ${mediaId}`;
+
+    const usersCollection = await users();
+    const user = await usersCollection.findOne({ _id: new ObjectId(userId) });
+
+    if (!user) throw `User with ID '${userId}' does not exist.`;
+
+    // see if the item is in the watchlist
+    const watchlistMedia = user.watchlist.find(
+      (item) => item.mediaId.toString() === mediaId && item.type === type
+    );
+
+    if (!watchlistMedia) {
+      return res.status(404).json({ error: 'Media not found in watchlist.' });
+    }
+
+    // pull the media from watchlist and add to the watched list
+    const updatedList = await usersCollection.updateOne(
+      { _id: new ObjectId(userId) },
+      {
+        $pull: { watchlist: { mediaId: new ObjectId(mediaId), type } },
+        $addToSet: { watched: { mediaId: new ObjectId(mediaId), type } },
+      }
+    );
+
+    if (updatedList.modifiedCount === 0) {
+      throw 'Failed to move media to watched list.';
+    }
+
+    res.status(200).json({ success: true });
+  } catch (error) {
+    console.error('Error moving media to watched list:', error);
+    res.status(500).json({ error: error?.toString() || 'Unknown error occurred' });
+  }
+});
+
+
 
   router.get('/user/:userId', async (req, res) => {
     try {
