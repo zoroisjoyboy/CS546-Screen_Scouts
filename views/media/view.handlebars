@@ -1,0 +1,201 @@
+
+<div class = "title-search"></div>
+<div class = "title-search">
+
+    <form action="/" method="GET" style="display:contents">      
+        <button id="submit_button" name="submit_button" type="submit"> Home </button>
+    </form>
+
+    <form action="/allmovies" method="GET" style="display:contents">      
+        <button id="submit_button" name="submit_button" type="submit"> All Movies </button>
+    </form>
+
+      <form action="/allshows" method="GET" style="display:contents">      
+        <button id="submit_button" name="submit_button" type="submit"> All Shows </button>
+    </form>
+
+      <form action="/newShow" method="GET" style="display:contents">      
+        <button id="submit_button" name="submit_button" type="submit"> Add Show </button>
+    </form>
+
+</div>
+
+<div class = container>
+
+{{#if media.title}}
+<h1>{{media.title}} </h1>
+{{else}}
+<h1>{{media.name}} </h1>
+{{/if}}
+</div>
+
+
+{{#if a}}
+    <div class="container">       
+        <div class="left-panel">   
+            <img src="https://image.tmdb.org/t/p/w200{{media.poster_path}}"/>
+                <div class="add-to-list">
+                {{!!<button>Add to My List</button>
+                <button>Add to Favorites</button> --}}  
+                <div class = "display">        
+                {{#each media.genres}}          
+                | {{this.name}} |               
+                {{/each}}
+                </div>             
+                </div>      
+        </div>            
+    
+             
+    <div class="right-panel">        
+        <div class = "details">
+            <div class = "left-panel">
+                <div class = "box2">
+                    <div class = "rating">Rating:</div>
+                    <div class = "score">{{media.vote_average}}</div>            
+                </div>
+            </div>            
+             
+            
+            <div class = "right-panel"> 
+                          
+            {{#if media.title }}
+             Type: <div class = "display"> MOVIE </div>
+            {{else}}
+            Type: <div class = "display"> TV SHOW </div>
+            {{/if}} 
+                          
+           
+
+            {{#if media.title}}
+             First Time on Air: <div class = "display"> {{media.release_date}} </div>
+            {{else}}
+            First Time on Air: {{media.first_air_date}}   
+            {{/if}} 
+            </div>           
+                              
+        </div>      
+
+        <div class = "details">          
+        <div class ="rank"> Review #{{media.vote_count}} users  |   Ranked #N/A   |   Popularity {{media.popularity}} |  Members # N/A </div>             
+        </div>
+
+        <div class = "box">
+        <div class="synopsis"><h3>Synopsis:</h3> 
+                        <p> {{media.overview}}</p>                        
+        </div>
+        </div>
+
+            {{!!<h3>Genres</h3> 
+            <div class = "display">        
+            {{#each media.genres}}          
+            {{!!    | {{this.name}} {{!!|               
+            {{!!{{/each}}
+            {{!!</div>--}}                
+
+                     
+            
+            {{#if media.director.name}}
+            <div class="director">Director/Creator: {{media.director.name}}</div>
+            {{else}}
+            <div class="director"Director/Creator: Unknown</div>   
+            {{/if}} 
+
+   
+    </div>
+    </div>
+    <div class = "maincast">
+        <h2>Main Cast</h2>      
+    </div>
+    <div class = container>
+                {{#each media.main_cast}}                                     
+                    <div class ="box"> <img src="https://image.tmdb.org/t/p/w200{{this.profile_path}}" alt="{{this.name}}"/> 
+                    <div >{{this.name}}</div>             
+                    </div>
+                {{/each}}
+            
+    </div>
+    {{else}}
+    <div class="container">       
+        <div class="left-panel">   
+            <img src="https://image.tmdb.org/t/p/w200{{media.poster_path}}"/>
+                <div class="add-to-list">
+                {{!<button>Add to My List</button>
+                <button>Add to Favorites</button> --}}               
+                </div>      
+        </div> 
+        <div class="right-panel"> 
+            {{#if media.title}}
+
+            <div class = "box2">
+                    <div class = "rating">Rating:</div>
+                    <div class = "display">{{media.vote_average}}</div>            
+            </div>
+
+            Type: <div class = "display"> MOVIE </div>
+            <p>Synopsis: {{media.overview}}</p>
+             <div class = "display">Rating: {{media.vote_average}}                
+             </div>
+            <p>Review: {{media.vote_count}} users</p>
+            <p>Director: {{media.director.name}}</p>          
+            
+            {{else}}
+
+            <div class = "box2">
+                <div class = "ratings"> Type: </div>                      
+               <div class = "display"> TV SHOW </div> 
+            
+               <div class = "ratings">Rating:</div>
+                <div class = "display">{{media.vote_average}}</div>                         
+            </div>            
+
+            <div class = "box"> Review #{{media.vote_count}} users  |   Ranked #N/A   |   Popularity {{media.popularity}}  </div>   
+
+            {{#if media.director.name}}
+            <h3> Synopsis:</h3> <p>{{media.overview}}</p>
+            {{else}}
+            <p><h3> Synopsis:</h3> Information not available</p>
+            {{/if}}            
+          
+            <h3>Genres: </h3> 
+            <div class = "display">        
+            {{#each media.genres}}          
+                | {{this.name}} |               
+            {{/each}}
+            </div>
+
+            
+            {{#if media.director.name}}
+            <div class = "director"> DIRECTOR: {{media.director.name}}</div>
+            {{else}}
+            <div class = "director"> DIRECTOR: Information not available </div>
+            {{/if}}
+            <div class ="display"> Episodes: {{media.number_of_episodes}} </div>
+            
+        
+            {{/if}}
+        </div>
+    </div> 
+    <div class = container>
+    {{#if media.main_cast}}
+        <h2>Main Cast</h2>
+    </div>
+    <div class = container>
+        {{#each media.main_cast}}                                     
+            <div class="box3"> <img src="https://image.tmdb.org/t/p/w200{{this.profile_path}}" alt="{{this.name}}"/> 
+            <div >{{this.name}}</div>             
+            </div>
+        {{/each}}  
+         
+    {{else}}
+    <div class = "director"> Main Cast: Information not available </div>
+    {{/if}}
+    </div>        
+    {{/if}}
+
+ 
+    <footer>
+          Created by: Screen-Scout group           
+    </footer>  
+
+ 
+
