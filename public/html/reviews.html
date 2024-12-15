@@ -13,9 +13,9 @@
         <!--Review Text-->
         <label for="mediaId">Select Movie/Show:</label>
         <select id="mediaId" name="mediaId" required>
-            <option value="">--Select Media --</option>
-            <option value="1">Movie 1</option>
-            <option value="2">Show 2</option>
+            {{#each media}}
+            <option value="">--"{{this._id}}" --</option>
+            {{/each}}
         </select>
 
         <!--Review Text-->

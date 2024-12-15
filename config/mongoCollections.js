@@ -10,7 +10,7 @@ const getCollectionFn = (collection) => {
         _col = await db.collection(collection);
     } catch (error) {
       console.error("Could not connect to the database:", error);
-      throw new Error; "Rethrow the error after logging in"
+      throw new Error("Error connecting to the database");
     }
   }
 

@@ -2,20 +2,20 @@ import { reviews, users, movies, shows } from '../config/mongoCollections.js';
 import { ObjectId } from 'mongodb';
 import validation from './validation.js';
 
-export const reviewMethods = {
-  async createReview(userId, mediaId, mediaType, text, rating) {
-    if (!userId || !mediaId || !mediaType || !text || !rating) {
-      throw 'All fields must be provided';
-    }
-    
+const getReviewsCollection = async () => {
+    return await reviews();
+};
+
+const reviewMethods = {
+  async createReview(userId, mediaId, mediaType, text, rating = null, draft = false) {
     userId = validation.checkId(userId);
     mediaId = validation.checkId(mediaId);
     text = validation.checkString(text, 'Review text');
-    
-    if (!rating || isNaN(rating) || rating < 1 || rating > 5) {
+
+    if (!draft && (!!rating || isNaN(rating) || rating < 1 || rating > 5)) {
       throw 'Rating must be a number between 1 and 5';
     }
-
+    
     const reviewCollection = await reviews();
     const userCollection = await users();
 
@@ -44,7 +44,8 @@ export const reviewMethods = {
       mediaType,
       mediaTitle,
       text,
-      rating,
+      rating: draft ? null : parseInt(rating, 10),
+      draft, //true for drafts, false for published reviews
       createdAt: new Date()
     };
 
@@ -138,6 +139,7 @@ export const reviewMethods = {
     if (!deleteInfo.deletedCount) throw 'Could not delete review';
     return true;
   }
-};
+  };
 
 export default reviewMethods;
+

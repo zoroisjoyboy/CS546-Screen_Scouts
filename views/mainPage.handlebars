@@ -8,7 +8,7 @@
         <ul>
             {{#each recentMovies}}
             <li>
-                <strong>{{title}}</strong> 
+                <strong><a href="/movies/{{this._id}}">{{title}}</a></strong> 
                 <br>Release Date: {{formatDate release_date}}
                 <br>Genres: {{#each genres}}{{this}}{{#unless @last}}, {{/unless}}{{/each}}
                 <br>Main Cast: {{#each main_cast}}{{this}}{{#unless @last}}, {{/unless}}{{/each}}

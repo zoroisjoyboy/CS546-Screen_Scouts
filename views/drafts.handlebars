@@ -1,0 +1,64 @@
+<div class="drafts-container">
+    <h2>My Drafts</h2>
+
+    {{#if drafts.length}}
+        <div class="drafts-grid">
+            {{#each drafts}}
+                <div class="draft-card">
+                    <h3>{{this.mediaTitle}} ({{this.mediaType}})</h3>
+                    <p class="draft-text">{{this.text}}</p>
+                    <div class="draft-meta">
+                        <span class="date">Last Edited: {{formatDate this.updatedAt}}</span>
+                    </div>
+                    <div class="draft-actions">
+                        <a href="/drafts/{{this._id}}/edit" class="edit-btn">Edit Draft</a>
+                        <button onclick="publishDraft('{{this._id}}')" class="publish-btn">Publish</button>
+                        <button onclick="deleteDraft('{{this._id}}')" class="delete-btn">Delete</button>
+                    </div>
+                </div>
+            {{/each}}
+        </div>
+    {{else}}
+        <p class="no-drafts">You don't have any drafts saved.</p>
+    {{/if}}
+</div>
+
+<script>
+function publishDraft(draftId) {
+    if (confirm('Are you sure you want to publish this draft?')) {
+        fetch(`/drafts/${draftId}/publish`, {
+            method: 'PUT',
+        })
+        .then(response => {
+            if (response.ok) {
+                window.location.reload();
+            } else {
+                throw new Error('Failed to publish draft');
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert(`Failed to publish draft: ${error.message}`);
+        });
+    }
+}
+
+function deleteDraft(draftId) {
+    if (confirm('Are you sure you want to delete this draft?')) {
+        fetch(`/drafts/${draftId}`, {
+            method: 'DELETE',
+        })
+        .then(response => {
+            if (response.ok) {
+                window.location.reload();
+            } else {
+                throw new Error('Failed to delete draft');
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('Failed to delete draft');
+        });
+    }
+}
+</script>

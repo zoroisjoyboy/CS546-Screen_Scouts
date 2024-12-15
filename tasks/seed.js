@@ -46,15 +46,16 @@ async function main() {
         const reviewsCollection = db.collection('reviews');
 
         const initialDraft = {
-            userId: 'movielovers913',
-            mediaId: 'qw1edefavcweq1234',
+            userId: new ObjectId(),
+            mediaId: new ObjectId(),
             text: 'This is an initial draft review for testing.',
-            date: new Date(),
+            draft: true,
+            createdAt: new Date(),
+            updatedAt: new Date(),
             rating: null, //Drafts don't require a rating
             likes: [],
             dislikes: [],
             comments: [],
-            draft: true 
         };
 
         await reviewsCollection.insertOne(initialDraft);

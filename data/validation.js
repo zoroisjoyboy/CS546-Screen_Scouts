@@ -20,7 +20,19 @@ const exportedMethods = {
     if (!isNaN(strVal))
       throw `Error: ${strVal} is not a valid value for ${varName} as it only contains digits`;
     return strVal;
-  }
+},
+
+checkNumber(value, varName) {
+  if (typeof value !== 'number' || isNaN(value))
+    throw `Error: ${varName} must be a valid number.`;
+  return value;
+},
+
+checkDate(date, varName) {
+  if (!date || isNaN(Date.parse(date))) 
+    throw `Error: ${varName} must be a valid date.`;
+  return new Date(date);
+},
 };
 
 export default exportedMethods;
