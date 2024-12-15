@@ -5,7 +5,7 @@ import {static as staticDir} from 'express';
 
 const constructorMethod = (app) => {
   // app.use('/', mediaRoutes);
-  app.use('/', userRoutes);
+  app.use('/', mediaRoutes);
   app.use('/public', staticDir('public'));
   
   app.use('*', (req, res) => {
