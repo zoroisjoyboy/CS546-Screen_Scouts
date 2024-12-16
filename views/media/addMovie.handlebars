@@ -1,8 +1,30 @@
-<h1>Add a new Movie</h1>
-<form action="/media/newMovie" method="POST">
+<div  class="list-sm"> Add a new Movie</div>
+<div class = "title-search">
+
+    <form action="/media" method="GET" style="display:contents">      
+        <button id="submit_button" name="submit_button" type="submit"> Home </button>
+    </form>
+
+    <form action="/media/allmovies" method="GET" style="display:contents">      
+        <button id="submit_button" name="submit_button" type="submit"> All Movies </button>
+    </form>
+
+      <form action="/media/allshows" method="GET" style="display:contents">      
+        <button id="submit_button" name="submit_button" type="submit"> All Shows </button>
+    </form>
+
+      <form action="/media/newShow" method="GET" style="display:contents">      
+        <button id="submit_button" name="submit_button" type="submit"> Add Show </button>
+    </form>
+
+</div>
+
+<form id="add-movie" name="add-movie" action="/media/newMovie" method="POST">
     <input type="text" name="title" id ="title" placeholder="Title" required>
-    <textarea name="overview" id ="overview" placeholder="Synopsis" required></textarea>
+    <textarea name="overview" id ="overview" placeholder="Synopsis" required rows="10" cols="80"></textarea>
     <input type="text" id="rating" placeholder="Rating" required>
+    <input type="text" id="popularity" placeholder="Popularity" required>
+    <input type="text" id="director" placeholder="Director/creator" required>
     <select name="type">
         <option value="movie">Movie</option>
         <option value="show">Show</option>
@@ -11,6 +33,3 @@
     <button type="submit">Add</button>
 </form>
 
-<div>
-<a href="/media"> Back to Search</a>
-</div> 
