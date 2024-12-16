@@ -1,25 +1,44 @@
-{{! This will be your default layout for all handlebars file rendered. This will be inherited by all other templates. }}
-
-
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-    <meta charset="utf-8">
-    <title>Media - Movie/Show </title>
-    <link rel="stylesheet" href="/public/css/main.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{{title}}</title>
+  <link rel="stylesheet" href="/public/css/main.css">
+  <script src="/public/js/form_validate.js"></script>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="/js/search.js"></script>
 </head>
 <body>
-    <header> 
-        <title>Media - Movie/Show </title>      
-    </header>
+  <header>
+    <div class="header-content">
+      <div class="logo">
+        <a href="/">Home</a>
+      </div>
+      <div class="auth-section">
+        {{#if user}}
+          <div class="user-info">
+            <img src="/public/assets/profilepics/{{user.profilePic}}" alt="Profile Picture" class="profile-pic">
+            <span class="username">{{user.userName}}</span>
+            <a href="/user/{{user._id}}" class="signout-btn">User Profile</a>
+            <a href="/signoutuser" class="signout-btn">Sign Out</a>
+          </div>
+        {{else}}
+          <div class="auth-buttons">
+            <a href="/signinuser" class="signin-btn">Sign In</a>
+            <a href="/signupuser" class="signup-btn">Sign Up</a>
+          </div>
+        {{/if}}
+      </div>
+    </div>
+  </header>
+  
+  <main>
+    {{{body}}}
+  </main>
 
-    
-    
-    <main>
-        {{{body}}}
-    </main>
-    
+  <footer>
+    <p></p>
+  </footer>
 </body>
-
 </html>
