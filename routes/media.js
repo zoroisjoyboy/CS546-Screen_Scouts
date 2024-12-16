@@ -9,7 +9,7 @@ router
   try {
   console.log('Home route accessed');
   //res.render('home', {title: 'Home'});   
-    res.render('media/search');
+    res.render('Home');
   } catch (e) {
     return res.status(500).send(e);
   }
