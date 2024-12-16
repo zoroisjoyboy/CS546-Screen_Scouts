@@ -33,7 +33,8 @@ let exportedMethods = {
         else
         return show_current;
       },
-      async addMovie(title, overview, vote_average, release_date) {
+      async addMovie(newTitle, overview, vote_average, release_date) {
+        if (!newTitle) throw "Title must be provided";
         overview = validation.checkString(overview, 'overview');
         //release_date = validation.checkString(release_date, 'release_date');
         //vote_average = validation.checkString(vote_average, 'vote_average');
@@ -47,10 +48,23 @@ let exportedMethods = {
         };
   
         const movieCollection = await movies();
+        //const existingMovieName = await userCollection.findOne({ title: newTitle });
+        const existingMovieName = await getMovieById(newTitle);
+        if (existingMovieName) {
+            throw "There is already a Movie with that Title";
+        }
+
         const newInsertInformation = await movieCollection.insertOne(newMovie);
-        if (!newInsertInformation.insertedId) throw 'Error: Insert failed!';
-    
-        return await this.getMovieById(newInsertInformation.insertedId.toString());
+        //if (!newInsertInformation.insertedId) throw 'Error: Insert failed!';
+        if (!newInsertInformation.acknowledged || !newInsertInformation.insertedId) {
+          return {registrationCompleted: false};
+        } else {
+          return {registrationCompleted: true};
+        }
+
+
+
+        //return await this.getMovieById(newInsertInformation.insertedId.toString());
       },   
       async addShow(name, overview, vote_average, first_air_date) {
         overview = validation.checkString(overview, 'overview');

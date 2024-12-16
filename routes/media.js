@@ -1,5 +1,5 @@
 import {Router} from 'express';
-// import { mediaData } from '../data/index.js';
+import { mediaData } from '../data/index.js';
 
 const router = Router();
 
@@ -50,19 +50,20 @@ router
   })
   .post(async (req, res) => {
     //code here for POST
-    const {media_id} = req.body; 
-    if (!media_id) {
+    const media_Id = req.body.media_id; 
+    console.log(media_Id);
+    if (!media_Id) {
       return res.status(400).render('media/search', { error: 'Media ID is required.' });
     } 
     let isComplete = false; 
      
     try {      
-        let media = await mediaData.getMovieById(media_id); 
+        let media = await mediaData.getMovieById(media_Id); 
         isComplete = media.title && media?.overview && media?.vote_average && media?.vote_count && media?.director.name && media?.popularity? true : false;
              
        
         if(!media){      
-            media = await mediaData.getShowById(media_id);
+            media = await mediaData.getShowById(media_Id);
             //isComplete = media.title && media?.overview && media?.vote_average && media?.director.name && media?.popularity? true : false;           
         }
         if(media){
@@ -128,16 +129,21 @@ router
 
   .post(async (req, res) => {
     //code here for POST
-    const {title, overview, rating, airDate} = req.body;
-    try {      
-      const media = await mediaData.addMovie(title, overview, rating, airDate);
-      //req.session.user = user;
-      if (!media) {
-        res.status(400).render('media/addMovie', { error: 'Invalid search.' });
-        return;
-      }     
-      res.render('media/view',{media});
-      //return res.json(media); 
+    let {title, overview, rating, airDate} = req.body;
+    try { 
+      console.log(title);     
+      const mediaResult = await mediaData.addMovie(title, overview, rating, airDate);
+      
+      console.log(mediaResult.registrationCompleted);
+       
+      if (mediaResult.registrationCompleted) {
+        return res.redirect('/');
+      } else {
+        return res.status(500).render('media/addMovie', {
+          profilePics,
+          error: 'Internal server error' 
+        });
+      }
     
     } catch (e) {
       return res.status(400).render('media/addMovie', { error: e });

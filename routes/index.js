@@ -4,8 +4,8 @@ import mediaRoutes from './media.js';
 import {static as staticDir} from 'express';
 
 const constructorMethod = (app) => {
-  // app.use('/', mediaRoutes);
-  app.use('/', mediaRoutes);
+   app.use('/', userRoutes);
+  app.use('/media', mediaRoutes);
   app.use('/public', staticDir('public'));
   
   app.use('*', (req, res) => {

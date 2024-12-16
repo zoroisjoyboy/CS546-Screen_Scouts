@@ -2,19 +2,19 @@
 <div  class="list-sm"> List of TV Shows.</div>
 <div class = "title-search">
 
-    <form action="/" method="GET" style="display:contents">      
+    <form action="/media" method="GET" style="display:contents">      
         <button id="submit_button" name="submit_button" type="submit"> Home </button>
     </form>
 
-    <form action="/allmovies" method="GET" style="display:contents">      
+    <form action="/media/allmovies" method="GET" style="display:contents">      
         <button id="submit_button" name="submit_button" type="submit"> All Movies </button>
     </form>
 
-      <form action="/newMovie" method="GET" style="display:contents">      
+      <form action="/media/newMovie" method="GET" style="display:contents">      
         <button id="submit_button" name="submit_button" type="submit"> Add Movie </button>
     </form>
 
-      <form action="/newShow" method="GET" style="display:contents">      
+      <form action="/media/newShow" method="GET" style="display:contents">      
         <button id="submit_button" name="submit_button" type="submit"> Add Show </button>
     </form>
 
@@ -22,7 +22,7 @@
 
 <div  class="list-sm">
     {{#each media}}    
-        <form action="/search" method="POST" style="display:contents">
+        <form action="/media/search" method="POST" style="display:contents">
         <input type="hidden" name="media_id" value="{{this.name}}">
         <button type="submit" style="border: none; background: none; padding: 0;">
             
