@@ -1,5 +1,4 @@
 import {Router} from 'express';
-// import {} from '../data/whateverthefilenameis.js';
 import { mediaData } from '../data/index.js';
 
 const router = Router();
@@ -7,8 +6,9 @@ const router = Router();
 router
    .route('/')
    .get(async (req, res) => {
-  //render the home.handlebars page if not then throw
-  try {   
+  try {
+  console.log('Home route accessed');
+  //res.render('home', {title: 'Home'});   
     res.render('media/search');
   } catch (e) {
     return res.status(500).send(e);
@@ -17,10 +17,10 @@ router
 router
    .route('/allmovies')
    .get(async (req, res) => {
-  //render the home.handlebars page if not then throw
   try {    
     const media = await mediaData.getAllMovies();  
     res.render('media/viewallmovies',{media});
+    console.log("All Movies loaded successfully!");
     //return res.json(media); 
   } catch (e) {
     return res.status(500).send(e);
@@ -29,10 +29,10 @@ router
 router
    .route('/allshows')
    .get(async (req, res) => {
-  //render the home.handlebars page if not then throw
   try {   
     const media = await mediaData.getAllShows();   
     res.render('media/viewallshows',{media});
+    console.log("All TV Shows loaded successfully!");
     //return res.json(media); 
   } catch (e) {
     return res.status(500).send(e);
@@ -41,41 +41,54 @@ router
 router
   .route('/search')
   .get(async (req, res) => {
-    //render the home.handlebars page if not then throw
     try { 
-      res.render('media/search');
-      //return res.json(media); 
+      //res.render('media/search');
+      return res.json(media); 
     } catch (e) {
       return res.status(500).send(e);
     }
   })
   .post(async (req, res) => {
     //code here for POST
-    const {media_id} = req.body;
+    const media_Id = req.body.media_id; 
+    console.log(media_Id);
+    if (!media_Id) {
+      return res.status(400).render('media/search', { error: 'Media ID is required.' });
+    } 
+    let isComplete = false; 
+     
     try {      
-        let media = await mediaData.getShowById(media_id);        
+        let media = await mediaData.getMovieById(media_Id); 
+        isComplete = media.title && media?.overview && media?.vote_average && media?.vote_count && media?.director.name && media?.popularity? true : false;
+             
+       
         if(!media){      
-            media = await mediaData.getMovieById(media_id);
-            //media = media_show;
+            media = await mediaData.getShowById(media_Id);
+            //isComplete = media.title && media?.overview && media?.vote_average && media?.director.name && media?.popularity? true : false;           
         }
         if(media){
             //return res.json(media);
-            res.render('media/view',{media});   
+            console.log('The requested movie/show is found!');
+           
+            res.render('media/view',{media, a: isComplete});   
         } else{
             return res.status(404).render('media/search', { error: 'Media not found.' });
         }       
         //return res.json(media);     
-      } catch (e) {
+      } catch (e) {        
         return res.status(500).render('media/search', { error: e });
       }
 
   });
+
+
 
   router
   .route('/newShow')
   .get(async (req, res) => {
     try {
       res.render('media/addShow');
+      console.log("Add Show page loaded.");
       //return res.json(media); 
     } catch (e) {
       return res.status(500).send(e);
@@ -100,11 +113,14 @@ router
     }
   });
 
+ 
+
   router
   .route('/newMovie')
   .get(async (req, res) => {
     try {
       res.render('media/addMovie');
+      console.log("Add Movie page loaded.");
       //return res.json(media); 
     } catch (e) {
       return res.status(500).send(e);
@@ -113,16 +129,21 @@ router
 
   .post(async (req, res) => {
     //code here for POST
-    const {title, overview, rating, airDate} = req.body;
-    try {      
-      const media = await mediaData.addMovie(title, overview, rating, airDate);
-      //req.session.user = user;
-      if (!media) {
-        res.status(400).render('media/addMovie', { error: 'Invalid search.' });
-        return;
-      }     
-      res.render('media/view',{media});
-      //return res.json(media); 
+    let {title, overview, rating, airDate} = req.body;
+    try { 
+      console.log(title);     
+      const mediaResult = await mediaData.addMovie(title, overview, rating, airDate);
+      
+      console.log(mediaResult.registrationCompleted);
+       
+      if (mediaResult.registrationCompleted) {
+        return res.redirect('/');
+      } else {
+        return res.status(500).render('media/addMovie', {
+          profilePics,
+          error: 'Internal server error' 
+        });
+      }
     
     } catch (e) {
       return res.status(400).render('media/addMovie', { error: e });
