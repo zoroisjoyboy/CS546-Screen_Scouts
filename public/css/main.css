@@ -1,70 +1,268 @@
-/* You will create a CSS stylesheet in /public/css/styles.css; this file should have at least 5 rulesets.  You will need to utilize all 5 rulesets on each of the pages (not every page has to use all 5 rulesets each but all 5 rulesets must be utilized by the various pages in your application).  So you can have some rulesets for one page, some for another page but there needs to be at least 5 total rulesets that are used between all the pages. There are two specific rulesets you need to create in addition to the 5 other rulesets:  .light and .dark.  Depending of the user's theme preferences stored in the session, your pages will be displayed using the user's theme preferences. If their theme preference is "light" then the background color of the page should be white and the text color of the page should be black.  If their theme preference is "dark" then the background color of the page should be black and the text color should be white.  HINT: You can just set the body element's class to either dark or light depending on their themePreference stored in the session. obviously, the theme preference only is active after a user is logged in.  */
-
-/* two rulesets you MUST implement in addition to the other 5:
-
-.light{
-    
+.header-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 20px;
+    background-color: #f4f4f4;
 }
 
-.dark{
-
+.auth-section {
+    display: flex;
+    align-items: center;
 }
 
-*/
+.auth-buttons a,
+.user-info a {
+    margin-left: 10px;
+    text-decoration: none;
+    color: #007bff;
+}
 
+.user-info {
+    display: flex;
+    align-items: center;
+}
+
+.profile-pic {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    margin-right: 10px;
+}
+
+.username {
+    font-weight: bold;
+    color: black;
+}
+
+#results div {
+  margin-bottom: 20px;
+}
+
+#results img {
+  max-width: 100%;
+  height: auto;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+}
+
+#results h3 {
+  margin: 10px 0;
+}
+
+.watchlist-display {
+  display: flex;
+  flex-wrap: nowrap; /* No wrapping by default */
+  overflow-x: auto; /* Add horizontal scrolling for large watchlists */
+  gap: 20px; /* Space between items */
+  padding: 10px;
+}
+
+.media-item {
+  flex: 0 0 auto; /* Prevent shrinking, don't grow */
+  width: 200px; /* Set a fixed width */
+  text-align: center; /* Center align text and image */
+}
+
+.media-item img {
+  width: 100%; /* Make the image fill up */
+}
+
+.media-item p {
+  margin-top: 10px;
+  font-size: 14px;
+  color: #333; 
+  font-weight: bold;
+}
 
 body {
-    font-family: Arial, sans-serif;
-    background-color: #e6e6b200;;
-    color: #6611c2;;
-    padding: 20px;
-    border-radius: 5px;
-    border: 2px solid #6611c2;
-    margin: 20px;
-  }
+  background-color: yellow; 
+  font-family: Arial, sans-serif;
+  background-color: #010a3b;
+  color: #ffff;
+  margin: 0;
+  padding: 0;
+} */
 
-  header, h1, h2, h3 {
-    font-size: 1.5em;
-  }
-  
-  input {
-    margin: 10px 0;
-    padding: 10px;
-    width: 100%;
-  }
+.title{
+  padding: 100px;
+  text-align: center;
+  font-size: 2em;
+  font-weight: bold;
+}
 
-  form {
-    margin: 20px auto;
-    padding: 20px;
-    border: 4px solid #7f8806;
-    width: 50%;
-  }
-  
-  label {
-    font-weight: bold;
-    display: block;
-    margin-top: 10px;
-  }
-  
-  
-  button {
-    padding: 10px 20px;
-    background-color: #7f8806;
-    color: white;
-    border: none;
-    cursor: pointer;
-  }
+.title-note{
+  padding: 10px;
+  text-align: center;
+  font-size: 1.25em;
+  font-weight: bold;
+}
 
-  button:hover {
-    background-color: #0056b3;
-  }
+.list-sm{
+  padding: 20px;
+  text-align: center;
+  font-size: 1.5em;
+  font-weight: bold;
+  margin-left: 0em;
+}
 
-  #error-message {
+.title-search{
+  padding: 10px;
+  text-align: center;
+  font-size: 1.25em;
+  font-weight: bold;
+}
+
+.container {
+  display: flex;
+  max-width: 1200px;
+  margin: 20px auto;
+  padding: 10px;
+  background-color: #222;
+  border-radius: 8px;
+}
+
+.left-panel {
+  width: 30%;
+  text-align: center;
+}
+
+.left-panel2{
+  width: 20%;
+  text-align: center;
+}
+
+.left-panel img {
+  width: 100%;
+  border-radius: 8px;
+}
+
+.right-panel {
+  width: 70%;
+  padding: 20px;
+}
+
+.right-panel2 {
+  width: 80%;
+  padding: 20px;
+}
+
+.details {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.details .rating {
+  font-size: 1.4em;
+  font-weight: bold;
+}
+.details .score {
+  font-size: 2.5em;
+  font-weight: bold;
+  color: #ebdf37;
+}
+
+.details .rank {
+  font-size: 1.5em;
+}
+
+.display{
+  font-size: 2em;
+  font-weight: bold;
+  color: #ebdf37;
+  padding: 10px;
+}
+
+.ratings {
+  font-size: 1.25em;
+  font-weight: bold;
+}
+
+.director {
+  padding: 10px;
+  font-size: 1.4em;
+  font-weight: bold;
+  font-style: normal;
+  color: aqua;
+}
+
+.add-to-list {
+  margin: 20px 0;
+}
+
+.add-to-list button {
+  padding: 10px 15px;
+  font-size: 1em;
+  color: #fff;
+  background-color: #007bff;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.add-to-list button:hover {
+  background-color: #0056b3;
+}
+
+.synopsis {
+  margin-top: 10px;
+  line-height: 1.15;
+  font-size: 0.9em;
+  font-style:italic ;
+}
+
+.box {
+  max-width: auto;
+  margin: 20px auto;
+  border-radius: 0.5cm;
+  border-width: 10px;
+  border: #f5f4f2;
+  padding: 10px;
+  border-style:dotted;
+  font-size: 1.25em;
+}
+
+.box2 {
+  max-width: 200px;
+  padding: 10px;
+  border: #f5f4f2;
+  border-style:double;
+  font-size: 1em;
+}
+
+.box3 {
+  padding: 20px;
+  border: #f5f4f2;
+  border-style:solid;
+  border-width: 1px;
+  
+}
+
+form {
+  margin: 20px auto;
+  padding: 20px;
+  border: 4px solid #eaebe2;
+  width: 50%;
+}
+
+#error-message {
   color: red;
   font-weight: bold;
   }
 
-  input, select {
-  padding: 5px;
+input, select {
+  
   margin-top: 5px;
+  margin: 10px 0;
+  padding: 10px;
+  width: 75%;
   }
+
+footer {
+  margin-top: 20px;
+  font-size: 0.8em;
+  color: #999;
+  text-align: center;
+}
