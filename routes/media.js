@@ -42,8 +42,8 @@ router
   .route('/search')
   .get(async (req, res) => {
     try { 
-      //res.render('media/search');
-      return res.json(media); 
+      res.render('media/search');
+      //return res.json(media); 
     } catch (e) {
       return res.status(500).send(e);
     }
