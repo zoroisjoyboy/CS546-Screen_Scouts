@@ -8,6 +8,17 @@
     <input type="text" id="searchInput" placeholder="Enter movie or show name" required>
     <button type="submit">Search</button>
   </form>
+      <form action="/media/allmovies" method="GET" style="display:contents">      
+        <button id="submit_button" name="submit_button" type="submit"> All Movies </button>
+    </form>
+
+      <form action="/media/allshows" method="GET" style="display:contents">      
+        <button id="submit_button" name="submit_button" type="submit"> All Shows </button>
+    </form>
+
+      <form action="/media/newShow" method="GET" style="display:contents">      
+        <button id="submit_button" name="submit_button" type="submit"> Add Show </button>
+    </form>
 </div>
   
   <input type="hidden" id="userId" value="{{userId}}">
