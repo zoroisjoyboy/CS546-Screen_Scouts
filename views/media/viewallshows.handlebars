@@ -1,42 +1,38 @@
-<h1>Media List </h1>
-<ul>
-<div><a href="/media"> Click to search for a movie/show</a></div>
-<a href="/media/allmovies"> Click here to view the list of all movies</a> 
-    {{#each media}}
-        <li>
-            {{#if media.release_date }}
-            <h2></h2><p>Title: {{this.original_name}}</p></h2>
-            {{else}}
-            <p>Title: Unknown</p> 
-            {{/if}}
 
-            {{#if media.overview }}
-            <div><p>Synopsis: {{media.overveiw}}</p>
-            </div>
-            {{else}}
-            <div><p>Synopsis: Information not available</p>  
-            {{/if}}
+<div  class="list-sm"> List of TV Shows.</div>
+<div class = "title-search">
 
-             {{#if this.vote_average}}
-             <p>Rating: {{this.vote_average}}</p>
-            {{else}}
-             <p>Rating: Rating informaiton not available</p>  
-            {{/if}}     
+    <form action="/media" method="GET" style="display:contents">      
+        <button id="submit_button" name="submit_button" type="submit"> Home </button>
+    </form>
 
-             {{#if this.director.name}}
-            <p>Director/Creator: {{this.director.name}}</p>
-            {{else}}
-            <p>Director/Creator: Unknown</p>   
-            {{/if}}     
+    <form action="/media/allmovies" method="GET" style="display:contents">      
+        <button id="submit_button" name="submit_button" type="submit"> All Movies </button>
+    </form>
 
-            <p>Genre: {{{this.genres.name}}}</p>
-            <p>Type: Show </p>   
+      <form action="/media/newMovie" method="GET" style="display:contents">      
+        <button id="submit_button" name="submit_button" type="submit"> Add Movie </button>
+    </form>
 
-            {{#if this.first_air_date}}
-            <p>Aired Date: {{this.first_air_date}}</p>
-            {{else}}
-            <p>Aired Date: Information not available</p>   
-            {{/if}}         
-        </li>
+      <form action="/media/newShow" method="GET" style="display:contents">      
+        <button id="submit_button" name="submit_button" type="submit"> Add Show </button>
+    </form>
+
+</div>
+
+<div  class="list-sm">
+    {{#each media}}    
+        <form action="/media/search" method="POST" style="display:contents">
+        <input type="hidden" name="media_id" value="{{this.name}}">
+        <button type="submit" style="border: none; background: none; padding: 0;">
+            
+        {{#if this.name}}
+        <img src="https://image.tmdb.org/t/p/w200{{this.poster_path}}" alt="{{this.name}}" style="cursor: pointer;" />
+        {{else}}
+        <img src="noimage" alt="No Image Available" style="cursor: pointer;" />
+        {{/if}}
+        
+        </button>
+         </form>
     {{/each}}
-</ul>
+</div>
